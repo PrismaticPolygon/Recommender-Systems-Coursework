@@ -1,11 +1,30 @@
 # Recommender-Systems-Coursework
 
-Develop a context-aware recommender system (CARS) music application. 
+Develop a context-aware recommender system (CARS) music application. Material for Web Technologies can be re-used. 
 
-Material for Web Technologies can be re-used. 
+### Context
 
-Context: select a single context (e.g. mood) from the contextual information collected in the dataset.
-Dataset: [MusicMicro](http://www.cp.jku.at/datasets/musicmicro/index.html). Much simpler than #nowplaying-RS.
+A context is "any information useful to characterise the situation of an entity (e.g. a user or an item) that can affect
+the way users interact with systems" (Abowd et al., 1999). It is a set of factors that delineate conditions under which 
+a user-item pair is assigned a rating. 
+
+There are four types of context:
+* Physical: time, position, user's activity, weather, light, temperature
+* Social: presence and role of other people around
+* Interaction media: device used, type of media browsed
+* Modal: user's mood, personality, purpose
+
+### Datasets
+
+Potential datasets:
+* [MusicMicro](http://www.cp.jku.at/datasets/musicmicro/index.html)
+* [FMA](https://archive.ics.uci.edu/ml/datasets/FMA%3A+A+Dataset+For+Music+Analysis)
+* [#nowplaying-RS](https://zenodo.org/record/3248543#.XlelyG52vxB)
+
+As MusicMicro is the simplest, I have used that one. As the dataset is rather limited, using the physical context is my
+only option.
+
+### Task
 
 Research, select, justify, and apply to your system techniques for:
 * Feature extraction and selection (consider user data, item data, and context)

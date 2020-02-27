@@ -35,3 +35,7 @@ UI: develop a simple UI for your application. This can be a Python script. Showc
 * how does the system recognise the active user? Which user data is gathered - explicit / implicit?
 * Output: how are recommendations and/or predictions presented to the user?
 
+### Geolocation
+
+Location data is automatically retrieved from IP address using [ipinfo.io](https://ipinfo.io/developers).
+

@@ -1,16 +1,23 @@
 import pandas as pd
 import numpy as np
 
-from functools import partial
-
-df = pd.read_csv("datasets/raw.csv", index_col="twitter-id")
+df = pd.read_csv("datasets/raw.csv")
 
 # Can't drop other IDs without risking duplicates, particularly for track-id
-df = df.drop(["country-id"], axis=1)
+# df = df.drop(["country-id"], axis=1)
 
+def build(column):
 
-# Okay. Let's get down to business. We wanted very limited dimensions to start with.
-# Whether it's a weekday or weekend.
+    mapper = dict()
+
+    for value in column:
+
+        if value not in mapper:
+
+            mapper[value] = len(mapper)
+
+    return mapper
+
 
 def cyclical(column, column_range, type):
     """
@@ -36,8 +43,6 @@ def cyclical(column, column_range, type):
 # Weekdays run from 0 to 6
 df["weekend"] = df["weekday"] >= 5
 
-# df = df.drop(["weekday"], axis=1)
-
 # Data was collected between 11/11 and 09/11
 # df["year"] = df["month"].map(lambda month: 2011 if month > 9 else 2012)
 
@@ -62,7 +67,7 @@ def season(month):
 
 
 df["season"] = df["month"].map(season)
-#
+
 # weekday = partial(cyclical, column_range=7)
 # month = partial(cyclical, column_range=12)
 #
@@ -75,11 +80,26 @@ df["season"] = df["month"].map(season)
 # Every film has a rating of 1: watched. This is a classification, not regression, problem.
 df["rating"] = 1
 
-df = df.drop(["month", "weekday"], axis=1)
-df = df.drop(["longitude", "latitude", "city-id", "artist", "track", "city"], axis=1)
+# Remap IDs to between 0 and len(id.unique())
+df["user_id"] = df["user-id"].map(build(df["user-id"]))
+df["artist_id"] = df["artist-id"].map(build(df["artist-id"]))
+df["track_id"] = df["track-id"].map(build(df["track-id"]))
+
+df = df.drop(["user-id", "track-id", "artist-id", "month", "weekday", "longitude", "latitude", "city-id", "artist",
+              "track", "city", "country", "twitter-id", "country-id"], axis=1)
+
+# df = df.rename(columns={"country-id": "country_id"})
+
+df = df.drop_duplicates()
+
+df = df.sort_values(["user_id", "track_id"])
+
+df = df[["user_id", "track_id", "weekend", "season", "rating"]]
 
 print(df.columns)
 
-df.to_csv("datasets/data.csv")
+print(df.head())
+
+df.to_csv("datasets/data.csv", index=False)
 
 

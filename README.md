@@ -44,3 +44,5 @@ Location data is automatically retrieved from IP address using [ipinfo.io](https
 * Tutorial on mood [here](https://neokt.github.io/projects/audio-music-mood-classification/)
 * Cutting-edge paper [here](https://arxiv.org/abs/1909.03999)
 * Presentation [here](https://www.slideshare.net/irecsys/tutorial-context-in-recommender-systems)
+* Maths [here](http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/)
+* Good slides [here](https://www.slideshare.net/irecsys/tutorial-context-awarerecommendationumap2013)

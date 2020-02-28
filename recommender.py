@@ -3,159 +3,88 @@ import numpy as np
 
 from scipy.sparse.linalg import svds
 
-# http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/
+NUM_RATINGS = 10000     # len(df)
+NUM_CONTEXTUAL_FACTORS = 2
+MAX_NUM_CONTEXTUAL_CONDITIONS = 4
+LAMBDA = 0.2
 
 # Much slower with dtype={"rating": bool}
-df = pd.read_csv("datasets/data.csv")
+df = pd.read_csv("datasets/data.csv", dtype={"weekend": int})
+df = df.sample(NUM_RATINGS)
+df = df.reset_index(drop=True)
 
-df = df.drop(["twitter-id", "artist-id", "country"], axis=1)
+NUM_ITEMS = len(df["track_id"].unique())
+NUM_USERS = len(df["user_id"].unique())
 
-df = df.set_index("user-id")
+print("|D| = {}. The number of tracks.".format(NUM_ITEMS))
+print("|U| = {}. The number of users.".format(NUM_USERS))
 
-print(df.head())
+# Pivot so that we have one row per user and one column per track.
+R = df.pivot_table(index="user_id", columns="track_id", values='rating').fillna(0)
 
-index = [x for x in range(136867)]
+# Normalise by users' means and convert to NumPy array. Differs from source code; see comment section.
+mean = np.array(R.mean(axis=1))
+demeaned = R.sub(mean, axis=0).fillna(0).values
 
-df = df.reindex(index, axis="index")
+# Perform singular value decomposition (SVD).
+d = min(demeaned.shape[0] - 1, 25)
+V, SIGMA, Q = svds(demeaned, k=d)
 
-# I'm close to losing my damn mind here.
-# Let's chill. I only have to do this once, after all, in pre-process.
+SIGMA = np.diag(SIGMA)
 
-#
-print(df.head())
-#
-# print(df.index.value_counts())
+print("\nV = |U| x d = {} x {}. Each row is the strength of association between a USER and features.".format(*V.shape))
+print("Q = |D| x d = {} x {}. Each row is the strength of association between an ITEM and features.".format(*Q.shape))
 
-# 136867 unique users.
-# There's no good way to normalise them. reset_index? drop_index? re_index>
+# Calculate predictions and put into a dataframe
+predictions = np.dot(np.dot(V, SIGMA), Q) + mean.reshape(-1, 1)
+predictions = pd.DataFrame(predictions, columns=R.columns)
+predictions.index.names = ["user_id"]
 
-# print(df.head())
+# Initialise B randomly
+B = np.random.rand(MAX_NUM_CONTEXTUAL_CONDITIONS, NUM_CONTEXTUAL_FACTORS)
 
-# df = df[:10000]
-# df = df.reset_index()
-#
-# print(df.columns)
-#
-# print("|D| = {}. The number of tracks.".format(len(df["track-id"].unique())))
-# print("|U| = {}. The number of users.".format(len(df["user-id"].unique())))
-#
-# # Pivot so that we have one row per user and one column per track.
-# R = df.pivot_table(index="user-id", columns="track-id", values='rating').fillna(0)
-#
-# # Normalise by users' means and convert to NumPy array. Differs from source code; see comment section.
-# mean = np.array(R.mean(axis=1))
-# demeaned = R.sub(mean, axis=0).fillna(0).values
-#
-# # Perform singular value decomposition (SVD).
-# d = min(demeaned.shape[0] - 1, 25)
-# V, SIGMA, Q = svds(demeaned, k=d)
-#
-# Q = np.transpose(Q)
-# SIGMA = np.diag(SIGMA)
-#
-# print("\nV = |U| x d = {} x {}. Each row is the strength of association between a USER and features.".format(*V.shape))
-# print("Q = |D| x d = {} x {}. Each row is the strength of association between an ITEM and features.".format(*Q.shape))
-#
-# # # Calculate predictions and put into a dataframe
-# # predictions = np.dot(np.dot(V, SIGMA), Q) + mean.reshape(-1, 1)
-# # predictions = pd.DataFrame(predictions, columns=R.columns)
-# # predictions.index.names = ["user-id"]
-#
-# # Create contextual factors matrix of shape (R, K, k), where R is the number of ratings, K is the maximum number
-# # of contextual conditions for a single contextual factor, and k is the number of contextual factors.
-# c = df[["weekend", "season"]]
-#
-# c.at[0, "season"] = 3
-# c.at[5000, "season"] = 1
-# c.at[9999, "season"] = 2
-#
-# # c = c.pivot_table(index=[c.index, "season"], values=["season", "weekend"])
-#
-# c = np.random.rand(10000, 4, 2)
-#
-# print(c.shape)
-#
-# # |B| = K x k (max no. contextual conditions x no. contextual factors)
-# B = np.random.rand(4, 2)
-# #
-# # # a = B * np.transpose(contexts)
-# # #
-# # # Wrong shape. If I tranposed one, mind you...
-# # # print(a.shape)
-# #
-# #
-# # print(R.shape)
-# # I suppose that one, or the other, should be transpose for my scalar value.
-#
-# x = c[0]    # (4, 2)
-# # q = x @ B   # Matrix multiplication Elementwise sum?
-#
-# print(np.sum(np.multiply(B, x)))
+# This will assume a certain format. It might actually be nicer to have them in separate tables
 
-# Okay.
-# There's no-one that one should be 74 million. God knows where they got that from.
-# Make it the index and then reset it?
+Q = Q.T
+
+# I suppose we should have a cost function.
+# It has a lot of inputs.
+
+def cost(R, V, Q, B):
+
+    cost_sum = 0
+
+    for row in R.itertuples():
+
+        index = row[0]
+        u = row[1]  # user_id
+        i = row[2]  # track_id
+        c = row[-NUM_CONTEXTUAL_FACTORS - 1:-1]  # context
+        r = row[-1]  # rating
+
+        v_u = V[index]
+        q_i = Q[index]
+
+        term = (r - np.dot(v_u, q_i) - sum([B[c[k], k] for k in range(2)])) ** 2
+
+        regularisation = LAMBDA * (np.dot(v_u, v_u) + np.dot(q_i, q_i) + np.sum(B ** 2))
+
+        cost_sum += term + regularisation
+
+    return cost_sum
 
 
-
-
-# That seems to work.
-
-
-# Doesn't error out. It must be the weights. Right? And
-
-# print(q.shape)
-
-
-# And the specific row is indexed by the r_UI. Okay.
+# SGD is sensitive to feature scaling
+# Converges after approx 10 ^ 6 training examples.
 #
-# r_uic = df.iloc[0].values
-#
-# # So now we're back to our indexing problem.
-# # I need to map those IDs from the present range to 0 to however many there are.
-#
-# # How is there a 0? Ah. That's the index.
-#
-#
-# print(r_uic)
-#
-# print(R.shape)
-#
-# y = R - np.dot(V, Q) - np.sum(B, axis=1)
-#
-# print(np.dot(V, Q).shape)   # 5339, 6033. Shouldn't it be 10,000?
-#
-# # That needs to be times the contextual factors.
-#
-# print(y.shape)  # (5339, 6033).
 
-# Curious, as we have 10000 ratings...
+params = np.concatenate((V, Q, B), axis=None)  # Flattens matrices before concatenation
 
+# Excellent. 350,000 parameters. Very trainable.
+# Huh. I need my custom loss function.
 
-# Disregard i_bar and b_u. The former is the average of item ratings in R, which is 1. I don't know what b_u is. Perhaps... the user's mean. Also 1.
-# for _, user in df.iterrows():
-#
-#     u = user["user-id"]
-#
-#     # track_ids similarly need re-indexing.
-#     # Which isn't that easy to do.
-#     # Must be a dataframe itself.
-#     # Perhaps matrix IS the way forwards.
-#
-#     for x in df.loc[df["user-id"] == u]:
-#
-#         print(x)
+print(params.shape)
 
-    # r = row["rating"]
-    # i = row["track-id"]
-    # c1 = row["country"]
-    # c2 = row["weekend"]
-    # c3 = row["season"]
+# print(V.flatten().shape)
 
-    # print("\n{} = ({}, {}, {}, {}, {})".format(r, u, i, c1, c2, c3))
-
-
-
-    # break
-
-# Excellent.
+# Parameters are in V, Q, b, and B.

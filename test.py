@@ -47,36 +47,24 @@ for index, r_uic in df.iterrows():
     r = r_uic["rating"]
     u = r_uic["user_id"]
     i = r_uic["track_id"]
-    c_q = [2, 0]
+
+    c = [r_uic["season"], int(r_uic["weekend"])]
+
+    print(c)
 
     v_u = V[index]
     q_i = Q[:, index]   # It's unclear whether Q ought to be transposed; get the column
 
-    y = r - np.dot(v_u, q_i)
+    y = (r - np.dot(v_u, q_i) - sum([B[c[k], k] for k in range(2)])) ** 2
 
-    # print(B.shape, c.shape)
+    regularisation = np.dot(v_u, v_u) + np.dot(q_i, q_i) + np.sum(B ** 2)
 
-    #Wait a second! Does each user have a context? Is that what I've made?
+    # And the user's baseline.
+    # Do I know this? How is it calculated?
 
-    # print(B)
-    # print(c)
-    #
-    # print(B * c)
+    # Er
 
-    # There's not really any way of knowing.
-
-    sum_i = 0
-
-    # What a goddamn ballache.
-    # I fuckin' did it, lads!
-    for k in range(2):
-
-        sum_i += B[c_q[k], k]
-
-    sum = np.sum(B * c)
-
-    print(sum)
-    print(sum_i)
+    # Nice. Now we just need that regularisation term
 
     print(y)
 

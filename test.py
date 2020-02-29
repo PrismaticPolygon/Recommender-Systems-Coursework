@@ -1,71 +1,84 @@
 import pandas as pd
 import numpy as np
 
-from scipy.sparse.linalg import svds
+from scipy.optimize import minimize
+from functools import partial
 
-# http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/
+NUM_RATINGS = 10000     # len(df)
+NUM_CONTEXTUAL_FACTORS = 2
+MAX_NUM_CONTEXTUAL_CONDITIONS = 4
+LAMBDA = 0.2
 
 # Much slower with dtype={"rating": bool}
-df = pd.read_csv("datasets/data.csv")
-df = df[:10000]
+df = pd.read_csv("datasets/data.csv", dtype={"weekend": int})
+# df = df.sample(NUM_RATINGS)
+df = df[:NUM_RATINGS]
+# df = df.reset_index(drop=True)
 
-print("|D| = {}. The number of tracks.".format(len(df["track_id"].unique())))
-print("|U| = {}. The number of users.".format(len(df["user_id"].unique())))
+NUM_ITEMS = len(df["track_id"].unique())
+NUM_USERS = len(df["user_id"].unique())
+
+print("|D| = {}. The number of tracks.".format(NUM_ITEMS))
+print("|U| = {}. The number of users.".format(NUM_USERS))
 
 # Pivot so that we have one row per user and one column per track.
 R = df.pivot_table(index="user_id", columns="track_id", values='rating').fillna(0)
 
-# # Normalise by users' means and convert to NumPy array. Differs from source code; see comment section.
-mean = np.array(R.mean(axis=1))
-demeaned = R.sub(mean, axis=0).fillna(0).values
+# Initialise parameters randomly
+d = np.random.randint(10, 50, (1, ))
 
-# Perform singular value decomposition (SVD).
-d = min(demeaned.shape[0] - 1, 25)
-V, SIGMA, Q = svds(demeaned, k=d)
-
-SIGMA = np.diag(SIGMA)
-
-print("\nV = |U| x d = {} x {}. Each row is the strength of association between a USER and features.".format(*V.shape))
-print("Q = |D| x d = {} x {}. Each row is the strength of association between an ITEM and features.".format(*Q.shape))
-
-# Calculate predictions and put into a dataframe
-predictions = np.dot(np.dot(V, SIGMA), Q) + mean.reshape(-1, 1)
-predictions = pd.DataFrame(predictions, columns=R.columns)
-predictions.index.names = ["user-id"]
-
-np.random.seed(1)
-
-# |B| = K x k (max no. contextual conditions x no. contextual factors)
-B = np.random.rand(4, 2)
-
-# |c| = max no. contextual conditions x no contextual factors (in CAMF-C)
-c = np.array([[0, 1], [0, 0], [1, 0], [0, 0]])
+B = np.random.rand(MAX_NUM_CONTEXTUAL_CONDITIONS, NUM_CONTEXTUAL_FACTORS)
+V = np.random.rand(NUM_USERS, d[0])
+Q = np.random.rand(NUM_ITEMS, d[0])
 
 
-for index, r_uic in df.iterrows():
+def cost(x, R):
 
-    r = r_uic["rating"]
-    u = r_uic["user_id"]
-    i = r_uic["track_id"]
+    d = int(x[0])
 
-    c = [r_uic["season"], int(r_uic["weekend"])]
+    i = 1
 
-    print(c)
+    B = x[i: (i + (MAX_NUM_CONTEXTUAL_CONDITIONS * NUM_CONTEXTUAL_FACTORS))]\
+        .reshape(MAX_NUM_CONTEXTUAL_CONDITIONS, NUM_CONTEXTUAL_FACTORS)
 
-    v_u = V[index]
-    q_i = Q[:, index]   # It's unclear whether Q ought to be transposed; get the column
+    i += MAX_NUM_CONTEXTUAL_CONDITIONS * NUM_CONTEXTUAL_FACTORS
 
-    y = (r - np.dot(v_u, q_i) - sum([B[c[k], k] for k in range(2)])) ** 2
+    V = x[i: i + (NUM_USERS * d)].reshape(NUM_USERS, d)
 
-    regularisation = np.dot(v_u, v_u) + np.dot(q_i, q_i) + np.sum(B ** 2)
+    i += NUM_USERS * d
 
-    # And the user's baseline.
-    # Do I know this? How is it calculated?
+    Q = x[i: i + (NUM_ITEMS * d)].reshape(NUM_ITEMS, d)
 
-    # Er
+    cost_sum = 0
 
-    # Nice. Now we just need that regularisation term
+    for row in R.itertuples():
 
-    print(y)
+        index = row[0]
+        u = row[1]  # user_id
+        i = row[2]  # track_id
+        c = [int(x) for x in row[-NUM_CONTEXTUAL_FACTORS - 1:-1]]  # context
+        r = row[-1]  # rating
 
-    break
+        v_u = V[index]
+        q_i = Q[index]
+
+        term = (r - np.dot(v_u, q_i) - sum([B[c[k], k] for k in range(2)])) ** 2
+
+        regularisation = LAMBDA * (np.dot(v_u, v_u) + np.dot(q_i, q_i) + np.sum(B ** 2))
+
+        cost_sum += term + regularisation
+
+    print(cost_sum)
+
+    return cost_sum
+
+# Too slow. Remember how fast SVD is?
+# Very slow. We have a lot of parameters.
+
+
+x = np.concatenate((d, B, V, Q), axis=None)
+fun = partial(cost, R=R)
+
+result = minimize(fun, x, method="BFGS")    # Everyone seems to use this.
+
+print(result)

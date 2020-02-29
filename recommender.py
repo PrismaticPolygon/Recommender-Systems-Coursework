@@ -19,12 +19,22 @@ NUM_USERS = len(df["user_id"].unique())
 print("|D| = {}. The number of tracks.".format(NUM_ITEMS))
 print("|U| = {}. The number of users.".format(NUM_USERS))
 
+
 # Pivot so that we have one row per user and one column per track.
 R = df.pivot_table(index="user_id", columns="track_id", values='rating').fillna(0)
 
 # Normalise by users' means and convert to NumPy array. Differs from source code; see comment section.
 mean = np.array(R.mean(axis=1))
 demeaned = R.sub(mean, axis=0).fillna(0).values
+
+print(demeaned.shape)   # (7026, 6188). No. users x no. tracks. 
+
+# That can be our initial guess for k.
+# Then we keep going, round and round.
+# This is going to be pretty fuckin' expensive.
+# That's fine, of course.
+# This will take decades to train, mind you.
+# I don't have to unwrap V or Q, just recalculate k.
 
 # Perform singular value decomposition (SVD).
 d = min(demeaned.shape[0] - 1, 25)
@@ -47,8 +57,26 @@ B = np.random.rand(MAX_NUM_CONTEXTUAL_CONDITIONS, NUM_CONTEXTUAL_FACTORS)
 
 Q = Q.T
 
-# I suppose we should have a cost function.
-# It has a lot of inputs.
+# So we want to minimise this function. x must be a 1-D array, which we can then unravel.
+# Itself a complex operation, mind you!
+
+# We are going to need these shapes.
+# Hol' up. We're optimising V and Q also.
+# Which means we'll have to include it ALL.
+# Unfortunate.
+# So it's just B?
+# Or do I?
+# In theory, yes. So long as my function is fast... I think.
+
+# x = np.concatenate((V, Q, B), axis=None)  # Flattens matrices before concatenation
+#
+# def cost_II(x, R):
+#
+#     V = x[]
+
+
+
+# Is R fixed? Yes.
 
 def cost(R, V, Q, B):
 
@@ -76,7 +104,23 @@ def cost(R, V, Q, B):
 
 # SGD is sensitive to feature scaling
 # Converges after approx 10 ^ 6 training examples.
-#
+
+print(V.shape)  # (7877, 25)
+
+q = V.shape
+
+x = V.flatten() # (198700, )
+
+# We also want to optimise k, though. We do that separately I believe.
+
+print(x.shape)
+
+z = x.reshape(q)
+
+print(z.shape)
+
+# Easy as taking candy off a baby.
+# Okay.
 
 params = np.concatenate((V, Q, B), axis=None)  # Flattens matrices before concatenation
 

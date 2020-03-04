@@ -1,10 +1,11 @@
+import os
 import pandas as pd
 import numpy as np
 
 from scipy.sparse.linalg import svds
 from scipy.optimize import minimize
 
-NUM_USERS = 10
+NUM_USERS = 100
 CONTEXTUAL_FACTORS = ["country", "season", "weekend"]
 LAMBDA = 0.2                                            # Learning rate
 
@@ -39,6 +40,7 @@ demeaned = R.sub(mean, axis=0).fillna(0).values
 d = min(demeaned.shape[0] - 1, 25)
 
 print("Number of latent dimensions d = {}".format(d))
+print("")
 
 V, SIGMA, Q = svds(demeaned, k=d)
 
@@ -81,7 +83,6 @@ regularisation = np.sum(V * V, axis=(1, 0)) ** 2 + np.sum(Q * Q, axis=(1, 0)) **
 
 print("Optimising context weights...")
 
-
 def cost(B):
 
     B = B.reshape(len(CONTEXTUAL_FACTORS), MAX_NUM_CONTEXTUAL_CONDITIONS)
@@ -99,4 +100,12 @@ result = minimize(cost, B, method="BFGS")
 
 B = result.x.reshape(len(CONTEXTUAL_FACTORS), MAX_NUM_CONTEXTUAL_CONDITIONS)
 
-print(B)
+if not os.path.exists("weights"):
+
+    os.mkdir("weights")
+
+np.save(os.path.join("weights", "B"), B)
+P.to_csv(os.path.join("weights", "P.csv"), index=False)
+
+# With 100 items...
+# This still takes ages, mind you.

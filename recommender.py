@@ -4,20 +4,29 @@ import numpy as np
 from scipy.sparse.linalg import svds
 from scipy.optimize import minimize
 
-NUM_RATINGS = 10000     # len(df)
-NUM_CONTEXTUAL_FACTORS = 2
-MAX_NUM_CONTEXTUAL_CONDITIONS = 4
-LAMBDA = 0.2
+NUM_USERS = 10
+CONTEXTUAL_FACTORS = ["country", "season", "weekend"]
+LAMBDA = 0.2                                            # Learning rate
 
-# Much slower with dtype={"rating": bool}
-df = pd.read_csv("datasets/data.csv", dtype={"weekend": int})
-df = df[:NUM_RATINGS]
+df = pd.read_csv("datasets/data.csv")
 
+# Select users with IDs from 0 to NUM_USERS
+df = df.loc[df['user_id'].isin([x for x in range(NUM_USERS)])]
+
+# Drop unused contextual factors
+df = df.drop(["city", "month"], axis=1)
+
+# Convert country to category. Should probably one-hot encode.
+df["country"] = df["country"].astype("category").cat.codes
+
+NUM_RATINGS = len(df)
 NUM_ITEMS = len(df["track_id"].unique())
-NUM_USERS = len(df["user_id"].unique())
+MAX_NUM_CONTEXTUAL_CONDITIONS = max([len(df[context].unique()) for context in CONTEXTUAL_FACTORS])
 
-print("|D| = {}. The number of tracks.".format(NUM_ITEMS))
-print("|U| = {}. The number of users.".format(NUM_USERS))
+print("\nNumber of items |D| = {}".format(NUM_ITEMS))
+print("Number of users |U| = {}".format(NUM_USERS))
+print("Number of ratings |R| = {}".format(NUM_RATINGS))
+print("")
 
 # Pivot so that we have one row per user and one column per track.
 R = df.pivot_table(index="user_id", columns="track_id", values='rating').fillna(0)
@@ -28,46 +37,66 @@ demeaned = R.sub(mean, axis=0).fillna(0).values
 
 # Perform SVD
 d = min(demeaned.shape[0] - 1, 25)
+
+print("Number of latent dimensions d = {}".format(d))
+
 V, SIGMA, Q = svds(demeaned, k=d)
 
-Q = Q.T
+# Convert to a diagonal for matrix multiplication
+SIGMA = np.diag(SIGMA)
+
+print("User matrix V = |U| x d = {} x {}".format(*V.shape))
+print("Item matrix Q = d x |D| = {} x {}".format(*Q.shape))
 
 # Randomly initialise context weights
-B = np.random.rand(MAX_NUM_CONTEXTUAL_CONDITIONS, NUM_CONTEXTUAL_FACTORS)
+B = np.random.rand(len(CONTEXTUAL_FACTORS), MAX_NUM_CONTEXTUAL_CONDITIONS)
+
+print("Context matrix B = no. factors x no. conditions = {} x {}".format(*B.shape))
+print("")
+
+# Compute predicted ratings
+P = np.dot(np.dot(V, SIGMA), Q) + mean.reshape(-1, 1)
+
+# Convert back to DataFrame and reformat so that each row is a tuple (user_id, item_id, prediction)
+P = pd.DataFrame(P)
+P.index.name = "user_id"
+P = P.reset_index()
+P = pd.melt(P, id_vars=["user_id"], var_name="track_id", value_name="prediction")
+
+# Merge onto original DataFrame.
+df = df.merge(P, on=["user_id", "track_id"])
+
+# Create context matrix
+C = np.zeros((NUM_RATINGS, len(CONTEXTUAL_FACTORS), MAX_NUM_CONTEXTUAL_CONDITIONS), dtype=np.uint8)
+
+for i, row in df.iterrows():
+
+    for j, context in enumerate(CONTEXTUAL_FACTORS):
+
+        C[i, j, row[context]] = 1
+
+# np.sum(V * V, axis=(1, 0)) is the sum (axis=0) of the row-wise (axis=1) dot product of V
+# https://stackoverflow.com/questions/15616742/vectorized-way-of-calculating-row-wise-dot-product-two-matrices-with-scipy
+regularisation = np.sum(V * V, axis=(1, 0)) ** 2 + np.sum(Q * Q, axis=(1, 0)) ** 2
+
+print("Optimising context weights...")
+
 
 def cost(B):
 
-    B = B.reshape(MAX_NUM_CONTEXTUAL_CONDITIONS, NUM_CONTEXTUAL_FACTORS)
+    B = B.reshape(len(CONTEXTUAL_FACTORS), MAX_NUM_CONTEXTUAL_CONDITIONS)
 
-    cost_sum = 0
+    contexts = np.sum(B * C, axis=(1, 2))
+    ratings = df["rating"].values
+    predictions = df["prediction"].values
 
-    for row in R.itertuples():
+    cost_sum = (ratings - predictions - contexts) ** 2 + LAMBDA * (regularisation + np.sum(B ** 2))
 
-        index = row[0]
-        u = row[1]  # user_id
-        i = row[2]  # track_id
-        c = [int(x) for x in row[-NUM_CONTEXTUAL_FACTORS - 1:-1]]  # context
-        r = row[-1]  # rating
-
-        v_u = V[index]
-        q_i = Q[index]
-
-        context = sum([B[c[k], k] for k in range(2)])
-        term = (r - np.dot(v_u, q_i) - context) ** 2
-
-        regularisation = LAMBDA * (np.dot(v_u, v_u) + np.dot(q_i, q_i) + np.sum(B ** 2))
-
-        cost_sum += term + regularisation
-
-    print("{:.4f}".format(cost_sum))
-
-    return cost_sum
+    return np.sum(cost_sum)
 
 
 result = minimize(cost, B, method="BFGS")
 
-B = result.x.reshape(MAX_NUM_CONTEXTUAL_CONDITIONS, NUM_CONTEXTUAL_FACTORS)
-
-# Need to extract result
+B = result.x.reshape(len(CONTEXTUAL_FACTORS), MAX_NUM_CONTEXTUAL_CONDITIONS)
 
 print(B)

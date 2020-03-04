@@ -46,3 +46,4 @@ Location data is automatically retrieved from IP address using [ipinfo.io](https
 * Presentation [here](https://www.slideshare.net/irecsys/tutorial-context-in-recommender-systems)
 * Maths [here](http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/)
 * Good slides [here](https://www.slideshare.net/irecsys/tutorial-context-awarerecommendationumap2013)
+* Recommender tutorial [here](https://beckernick.github.io/matrix-factorization-recommender/)

@@ -16,73 +16,76 @@ if not os.path.exists("datasets"):
 
         zipfile.extractall("datasets")
 
-# I do want to reset the indexes for all
+artists = pd.read_table("datasets/artist_mapping.txt", index_col="artist-id")
+cities = pd.read_table("datasets/city_mapping.txt", index_col="city-id")
+countries = pd.read_table("datasets/country_mapping.txt", index_col="country-id")
+tracks = pd.read_table("datasets/track_mapping.txt", index_col="track-id")
+
+# Use index_col to fix malformed file (delimiters at the end of each line)
+df = pd.read_table("datasets/listening_data.txt", index_col=False)
+
+# Merge on respective IDs
+df = df.join(cities, on="city-id")
+df = df.join(countries, on="country-id")
+df = df.join(artists, on="artist-id")
+df = df.join(tracks, on="track-id")
+
+# Remove null columns and duplicates
+df = df.dropna()
+df = df.drop_duplicates()
+
+# Sort by frequency: https://stackoverflow.com/questions/44363585/sort-by-frequency-of-values-in-a-column-pandas
+frequencies = df["user-id"].value_counts().to_dict()
+df["frequency"] = df["user-id"].map(frequencies)
+df = df.sort_values("frequency", ascending=False)
+
+# Remove redundant columns
+df = df.drop(["twitter-id", "frequency", "latitude", "longitude"], axis=1)
+
+# Rename columns to use underscores
+df = df.rename(lambda name: name.replace("-", "_"), axis=1)
+
+
+def season(month):
+
+    if month in [11, 12, 1]:
+
+        return 0    # Winter
+
+    elif month in [2, 3, 4]:
+
+        return 1    # Spring
+
+    elif month in [5, 6, 7]:
+
+        return 2    # Summer
+
+    elif month in [8, 9, 10]:
+
+        return 3    # Autumn
+
+
+def weekend(weekday):
+
+    return 0 if weekday < 5 else 1
+
 
 def index(column):
 
-    indices = dict()
-
-    for value in column:
-
-        if value not in indices:
-
-            indices[value] = len(indices)
-
-    return indices
+    return {x: i for (i, x) in enumerate(df[column].unique())}
 
 
-# Re-index artists from 0 - n
-artists = pd.read_csv("datasets/artist_mapping.txt", delimiter="\t")
-artist_index_map = index(artists["artist-id"])
+df["season"] = df["month"].map(season)
+df["weekend"] = df["weekday"].map(weekend)
+df["rating"] = 1
 
-artists["artist_id"] = artists["artist-id"].map(artist_index_map)
-artists = artists.drop("artist-id", axis=1)
-artists = artists.set_index("artist_id")
+# Re-order columns for cleaner recommender code
+df = df[["user_id", "track_id", "rating", "artist_id", "city_id", "track", "artist", "country", "city", "month",
+         "season", "weekend"]]
 
-# Cities and countries are already indexed 0 - n
-cities = pd.read_csv("datasets/city_mapping.txt", delimiter="\t", index_col="city-id")
-countries = pd.read_csv("datasets/country_mapping.txt", delimiter="\t", index_col="country-id")
+# Re-number user and track IDs from 0 - n for use in SVD
+df["user_id"] = df["user_id"].map(index("user_id"))
+df["track_id"] = df["track_id"].map(index("track_id"))
 
-# Re-index tracks from 0 - n
-tracks = pd.read_csv("datasets/track_mapping.txt", delimiter="\t")
-track_index_map = index(tracks["track-id"])
-
-tracks["track_id"] = tracks["track-id"].map(track_index_map)
-tracks = tracks.drop("track-id", axis=1)
-tracks = tracks.set_index("track_id")
-
-# Use index_col to fix malformed file (delimiters at the end of each line)
-data = pd.read_table("datasets/listening_data.txt", index_col=False)
-
-# Map user_id from 0 to n
-user_index_map = index(data["user-id"])
-
-data["user_id"] = data["user-id"].map(user_index_map)
-data = data.drop("user-id", axis=1)
-
-# Replace artist-id and track-id with mappings
-data["artist_id"] = data["artist-id"].map(artist_index_map)
-data["track_id"] = data["track-id"].map(track_index_map)
-
-data = data.drop(["track-id", "artist-id", "twitter-id"], axis=1)
-
-# Drop NaN values. Some of the tracks and artists in listening_data.txt don't have equivalents in artist_mapping / track_mapping
-data = data.dropna()
-
-data = data.reset_index(drop=True)
-
-# I won't do any of the other shit.
-# There isn't much point, after all.
-
-print(data.columns)
-
-print(data)
-
-data = data.join(cities, on="city_id")
-data = data.join(countries, on="country_id")
-data = data.join(artists, on="artist_id")
-data = data.join(tracks, on="track_id")
-
-# Let's just do a bit.
-
-data.to_csv("datasets/raw.csv")
+# Save to CSV sans columns
+df.to_csv(os.path.join("datasets", "data.csv"), index=False)

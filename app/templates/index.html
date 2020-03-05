@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+    <h2> {{ Tracks }} </h2>
+
+    <table class="table">
+
+        <tr>
+
+            <th> {{ ID }} </th>
+
+            <th>{{ Name }} </th>
+
+        </tr>
+
+        {% for track in tracks %}
+
+            <tr>
+
+                <td>
+
+                    {{ track.id }}
+
+                </td>
+
+                <td>
+
+                    {{ track.name }}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+    </table>
+
+{% endblock %}

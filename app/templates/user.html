@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+    <table class="table table-hover" style="width:100%; border-collapse: collapse">
+
+        <tr>
+
+            <td width="256px"><img src="{{ user.avatar(256) }}"></td>
+
+            <td>
+
+                <h1>{{ user.username }}</h1>
+
+<!--                    {% if user.last_seen %}-->
+
+<!--                        <p>{{ _('Last seen on') }}: {{ moment(user.last_seen).format('LLL') }}</p>-->
+
+<!--                    {% endif %}-->
+
+                <p>ID: {{ user.id }}</p>
+
+<!--                {{ wtf.quick_form(delete_user_form) }}-->
+
+            </td>
+
+        </tr>
+
+    </table>
+
+<!--    <div class="row">-->
+
+<!--        <div class="col-md-6">-->
+
+<!--            <h2> {{ _("Create or update a rating") }}</h2>-->
+
+<!--            {{ wtf.quick_form(edit_form) }}-->
+
+<!--        </div>-->
+
+<!--        <div class="col-md-6">-->
+
+<!--                <h2> {{ _("Delete a rating") }}</h2>-->
+
+<!--                {{ wtf.quick_form(delete_form) }}-->
+
+<!--            </div>-->
+
+<!--    </div>-->
+
+    {% if ratings == [] %}
+
+        <h2> {{ _("Recommendations (random)") }} </h2>
+
+    {% else %}
+
+        <h2> {{ _("Recommendations") }} </h2>
+
+    {% endif %}
+
+<!--    <table class="table">-->
+
+<!--        <tr>-->
+
+<!--            <th>{{ _("ID") }}</th>-->
+
+<!--            <th>{{ _("Title") }}</th>-->
+
+<!--            <th>{{ _("Value") }}</th>-->
+
+<!--            <th>{{ _("Genres") }}</th>-->
+
+<!--        </tr>-->
+
+<!--        {% for recommendation in recommendations %}-->
+
+<!--            <tr>-->
+
+<!--                <td>-->
+
+<!--                    {{ recommendation.book_id }}-->
+
+<!--                </td>-->
+
+<!--                <td>-->
+<!--                    {{ recommendation.title }}-->
+<!--                </td>-->
+
+<!--                 <td>-->
+
+<!--                    {{ recommendation.value }}-->
+
+<!--                </td>-->
+
+<!--                <td>-->
+
+<!--                    {{ recommendation.genres }}-->
+
+<!--                </td>-->
+
+<!--            </tr>-->
+
+<!--        {% endfor %}-->
+
+<!--    </table>-->
+
+
+<!--    {% if ratings == [] %}-->
+
+<!--        <h2 style="text-align: center">{{ _("Rate a book to start receiving personalised recommendations!") }}</h2>-->
+
+<!--    {% else %}-->
+
+<!--        <h2> {{ _("Ratings") }} </h2>-->
+
+<!--        <table class="table">-->
+
+<!--            <tr>-->
+
+<!--               <th>{{ _("ID") }}</th>-->
+
+<!--                <th>{{ _("Title") }}</th>-->
+
+<!--                <th>{{ _("Rating") }}</th>-->
+
+<!--                <th>{{ _("Genres") }}</th>-->
+
+<!--            </tr>-->
+
+<!--            {% for rating in ratings %}-->
+
+<!--                <tr>-->
+
+<!--                    <td>-->
+
+<!--                        {{ rating.book_id }}-->
+
+<!--                    </td>-->
+
+<!--                    <td>-->
+<!--                        {{ rating.title }}-->
+<!--                    </td>-->
+
+<!--                    <td>-->
+
+<!--                        {{ rating.value }}-->
+
+<!--                    </td>-->
+
+<!--                    <td>-->
+
+<!--                        {{ rating.genres }}-->
+
+<!--                    </td>-->
+
+<!--                </tr>-->
+
+<!--            {% endfor %}-->
+
+<!--        </table>-->
+
+<!--    {% endif %}-->
+
+{% endblock %}

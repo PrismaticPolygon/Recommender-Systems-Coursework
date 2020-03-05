@@ -1,0 +1,61 @@
+2020-03-04 20:41:28,082 INFO: Bookler startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:70]
+2020-03-04 20:41:36,231 INFO: Bookler startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:70]
+2020-03-04 20:41:52,229 INFO: Bookler startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:70]
+2020-03-04 21:16:33,608 INFO: Bookler startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:62]
+2020-03-04 21:16:40,036 INFO: Bookler startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:62]
+2020-03-04 21:16:44,297 INFO: Bookler startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:62]
+2020-03-04 21:16:54,215 ERROR: Exception on / [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1947, in full_dispatch_request
+    rv = self.preprocess_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2241, in preprocess_request
+    rv = func()
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 15, in before_request
+    if current_user.is_authenticated:
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\werkzeug\local.py", line 348, in __getattr__
+    return getattr(self._get_current_object(), name)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\werkzeug\local.py", line 307, in _get_current_object
+    return self.__local()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_login\utils.py", line 26, in <lambda>
+    current_user = LocalProxy(lambda: _get_user())
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_login\utils.py", line 335, in _get_user
+    current_app.login_manager._load_user()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\werkzeug\local.py", line 348, in __getattr__
+    return getattr(self._get_current_object(), name)
+AttributeError: 'Flask' object has no attribute 'login_manager'
+2020-03-04 21:16:54,443 ERROR: Exception on /favicon.ico [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1947, in full_dispatch_request
+    rv = self.preprocess_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2241, in preprocess_request
+    rv = func()
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 15, in before_request
+    if current_user.is_authenticated:
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\werkzeug\local.py", line 348, in __getattr__
+    return getattr(self._get_current_object(), name)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\werkzeug\local.py", line 307, in _get_current_object
+    return self.__local()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_login\utils.py", line 26, in <lambda>
+    current_user = LocalProxy(lambda: _get_user())
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_login\utils.py", line 335, in _get_user
+    current_app.login_manager._load_user()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\werkzeug\local.py", line 348, in __getattr__
+    return getattr(self._get_current_object(), name)
+AttributeError: 'Flask' object has no attribute 'login_manager'
+2020-03-04 21:24:14,308 INFO: Bookler startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:62]

@@ -6,13 +6,16 @@ from scipy.sparse.linalg import svds
 from scipy.optimize import minimize
 
 NUM_USERS = 100
+
 CONTEXTUAL_FACTORS = ["country", "season", "weekend"]
 LAMBDA = 0.2                                            # Learning rate
 
 df = pd.read_csv("datasets/data.csv")
 
-# Select users with IDs from 0 to NUM_USERS
-df = df.loc[df['user_id'].isin([x for x in range(NUM_USERS)])]
+if NUM_USERS is not None:
+
+    # Select users with IDs from 0 to NUM_USERS
+    df = df.loc[df['user_id'].isin([x for x in range(NUM_USERS)])]
 
 # Drop unused contextual factors
 df = df.drop(["city", "month"], axis=1)
@@ -107,5 +110,8 @@ if not os.path.exists("weights"):
 np.save(os.path.join("weights", "B"), B)
 P.to_csv(os.path.join("weights", "P.csv"), index=False)
 
+with open(os.path.join("weights", "log.txt"), "w") as log:
+
+    log.write(str(result))
+
 # With 100 items...
-# This still takes ages, mind you.

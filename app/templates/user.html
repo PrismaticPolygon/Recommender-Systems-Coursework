@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
 
@@ -7,21 +6,11 @@
 
         <tr>
 
-            <td width="256px"><img src="{{ user.avatar(256) }}"></td>
+            <td width="48px"><img src="{{ user.avatar(256) }}"></td>
 
             <td>
 
-                <h1>{{ user.username }}</h1>
-
-<!--                    {% if user.last_seen %}-->
-
-<!--                        <p>{{ _('Last seen on') }}: {{ moment(user.last_seen).format('LLL') }}</p>-->
-
-<!--                    {% endif %}-->
-
-                <p>ID: {{ user.id }}</p>
-
-<!--                {{ wtf.quick_form(delete_user_form) }}-->
+                <h1>User ID: {{ user.id }}</h1>
 
             </td>
 
@@ -29,137 +18,123 @@
 
     </table>
 
-<!--    <div class="row">-->
+    <h2> {{ "Contexts" }}</h2>
 
-<!--        <div class="col-md-6">-->
+<!--    <select name= colours method="GET" action="/">-->
 
-<!--            <h2> {{ _("Create or update a rating") }}</h2>-->
+<!--        {% for colour in [0, 1] %}-->
 
-<!--            {{ wtf.quick_form(edit_form) }}-->
-
-<!--        </div>-->
-
-<!--        <div class="col-md-6">-->
-
-<!--                <h2> {{ _("Delete a rating") }}</h2>-->
-
-<!--                {{ wtf.quick_form(delete_form) }}-->
-
-<!--            </div>-->
-
-<!--    </div>-->
-
-    {% if ratings == [] %}
-
-        <h2> {{ _("Recommendations (random)") }} </h2>
-
-    {% else %}
-
-        <h2> {{ _("Recommendations") }} </h2>
-
-    {% endif %}
-
-<!--    <table class="table">-->
-
-<!--        <tr>-->
-
-<!--            <th>{{ _("ID") }}</th>-->
-
-<!--            <th>{{ _("Title") }}</th>-->
-
-<!--            <th>{{ _("Value") }}</th>-->
-
-<!--            <th>{{ _("Genres") }}</th>-->
-
-<!--        </tr>-->
-
-<!--        {% for recommendation in recommendations %}-->
-
-<!--            <tr>-->
-
-<!--                <td>-->
-
-<!--                    {{ recommendation.book_id }}-->
-
-<!--                </td>-->
-
-<!--                <td>-->
-<!--                    {{ recommendation.title }}-->
-<!--                </td>-->
-
-<!--                 <td>-->
-
-<!--                    {{ recommendation.value }}-->
-
-<!--                </td>-->
-
-<!--                <td>-->
-
-<!--                    {{ recommendation.genres }}-->
-
-<!--                </td>-->
-
-<!--            </tr>-->
+<!--            <option value= "{{colour}}" SELECTED>{{colour}}</option>"-->
 
 <!--        {% endfor %}-->
+<!--    </select>-->
 
-<!--    </table>-->
+    <form action='/' method='POST'>
 
+        {{form.hidden_tag() }}
 
-<!--    {% if ratings == [] %}-->
+        <button class="btn btn-info btn-md dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="color_dropdown" >
+            Select Color
+            <span class="caret"></span>
+            </button>
 
-<!--        <h2 style="text-align: center">{{ _("Rate a book to start receiving personalised recommendations!") }}</h2>-->
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-<!--    {% else %}-->
+        {% for subfield in form.choices %}
 
-<!--        <h2> {{ _("Ratings") }} </h2>-->
+              <a class="dropdown-item" href="#">
+                {{ subfield.label }}
+              </a>
 
-<!--        <table class="table">-->
+        {% endfor %}
+        </div>
 
-<!--            <tr>-->
+        <div class="submit">
+            {{ form.submit(class="btn btn-info") }}
+        </div>
 
-<!--               <th>{{ _("ID") }}</th>-->
+    </form>
 
-<!--                <th>{{ _("Title") }}</th>-->
+    <h2> {{ "Listening events" }} </h2>
 
-<!--                <th>{{ _("Rating") }}</th>-->
+    <table class="table">
 
-<!--                <th>{{ _("Genres") }}</th>-->
+        <tr>
 
-<!--            </tr>-->
+           <th>{{ "ID" }}</th>
 
-<!--            {% for rating in ratings %}-->
+            <th>{{ "Track" }}</th>
 
-<!--                <tr>-->
+            <th>{{ "Artist" }}</th>
 
-<!--                    <td>-->
+            <th>{{ "Country" }}</th>
 
-<!--                        {{ rating.book_id }}-->
+            <th>{{ "City" }}</th>
 
-<!--                    </td>-->
+            <th>{{ "Season" }}</th>
 
-<!--                    <td>-->
-<!--                        {{ rating.title }}-->
-<!--                    </td>-->
+            <th>{{ "Month" }}</th>
 
-<!--                    <td>-->
+            <th>{{ "Weekend" }}</th>
 
-<!--                        {{ rating.value }}-->
+        </tr>
 
-<!--                    </td>-->
+        {% for event in events %}
 
-<!--                    <td>-->
+            <tr>
 
-<!--                        {{ rating.genres }}-->
+                <td>
 
-<!--                    </td>-->
+                    {{ event.id }}
 
-<!--                </tr>-->
+                </td>
 
-<!--            {% endfor %}-->
+                <td>
 
-<!--        </table>-->
+                    {{ event.name }}
 
-<!--    {% endif %}-->
+                </td>
+
+                <td>
+
+                    {{ event.artist }}
+
+                </td>
+
+                  <td>
+
+                    {{ event.country }}
+
+                </td>
+
+                <td>
+
+                    {{ event.city }}
+
+                </td>
+
+                <td>
+
+                    {{ event.season }}
+
+                </td>
+
+                <td>
+
+                    {{ event.month }}
+
+                </td>
+
+                <td>
+
+                    {{ event.weekend }}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+    </table>
 
 {% endblock %}

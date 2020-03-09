@@ -1,5 +1,16 @@
+import os
+import pandas as pd
+import numpy as np
+
 from hashlib import md5
 from app import db
+from config import Config
+
+
+P = pd.read_csv(os.path.join("weights", "P.csv"), index_col="user_id")
+B = np.load(os.path.join("weights", "B.npy"))
+
+# config = Config()
 
 
 class User(db.Model):
@@ -12,58 +23,62 @@ class User(db.Model):
 
         return '#{}: {}'.format(self.id, self.username)
 
+    # Nah. Too long. I'd have to maintain a sparse matrix in the background.
+    # Perhaps I could just update rows? No: it's not important.
+    # As we're not going to be adding new tracks or users, it's all Gucci.
+    # And I could, in fact, update R.
+    # Load up R.
+
+
     def get_events(self):
 
-        events = self.events.order_by(Event.value.desc()).join(Track).add_columns(Track.name, Track.id).all()
-
-        print(events)
+        events = self.events.join(Track, Artist, City, Country).add_columns(Track.name, Track.artist_id, Artist.name,
+                                                                            City.name, Country.name).all()
 
         events = [{
-            "value": event[0].value,
-            "title": event[1],
-            "genres": event[2].replace("|", ", "),
-            "book_id": event[3]
+            "id": event[0].id,
+            "month": event[0].month,
+            "weekend": event[0].weekend,
+            "season": event[0].season,
+            "rating": event[0].rating,
+            "city_id": event[0].city_id,
+            "country_id": event[0].country_id,
+            "user_id": event[0].user_id,
+            "name": event[1],
+            "artist_id": event[2],
+            "artist": event[3],
+            "city": event[4],
+            "country": event[5]
         } for event in events]
 
         return events
 
-    # @staticmethod
-    # def build_matrices():
-    #
-    #     # Convert Book to a DataFrame
-    #     books_df = pd.DataFrame([book.to_dict() for book in Book.query.all()])
-    #     books_df = books_df.rename({"id": "book_id"}, axis=1)
-    #
-    #     print("BOOKS\n")
-    #     print(books_df)
-    #
-    #     # Convert Rating to a DataFrame
-    #     ratings_df = pd.DataFrame([rating.to_dict() for rating in Rating.query.all()])
-    #     ratings_df = ratings_df.drop("id", axis=1)
-    #
-    #     print("RATINGS\n")
-    #     print(ratings_df)
-    #
-    #     R_df = ratings_df.pivot(index="user_id", columns="book_id", values="value")
-    #
-    #     user_ratings_mean = np.array(R_df.mean(axis=1))
-    #
-    #     R_demeaned = R_df.sub(R_df.mean(axis=1), axis=0).fillna(0).values
-    #
-    #     k = min(R_demeaned.shape[0] - 1, 25)
-    #
-    #     U, sigma, Vt = svds(R_demeaned, k=k)
-    #     sigma = np.diag(sigma)
-    #
-    #     predictions = np.dot(np.dot(U, sigma), Vt) + user_ratings_mean.reshape(-1, 1)
-    #     predictions_df = pd.DataFrame(predictions, columns=R_df.columns)
-    #
-    #     return predictions_df, books_df
-    #
-    #
-    # def get_recommendations(self, num_recommendations=10):
-    #
-    #     predictions_df, books_df = User.build_matrices()
+    def get_recommendations(self, context=None, num_recommendations=10):
+
+        # events = pd.read_sql(self.events, config.SQLALCHEMY_DATABASE_URI)
+        events = pd.DataFrame([event.to_dict() for event in self.events.all()])
+
+        # Bruh
+
+        predictions = pd.DataFrame(P.iloc[self.id].sort_values(ascending=False)).reset_index()  # Get predictions for that user.
+
+
+        # Strange.
+
+        print(predictions)
+
+        # # Then merge onto event details. Not ideal having these backing DFs!
+        #
+        # # So what's the purpose of events again?
+        #
+        # if context:     # Otherwise multiply with context-weight matrix
+        #
+        #     pass
+        #
+        # predictions = predictions.dropna()
+        #
+        # return predictions[:num_recommendations]
+
     #
     #     ratings = pd.DataFrame([rating.to_dict() for rating in self.ratings.all()])
     #
@@ -103,7 +118,7 @@ class User(db.Model):
 
     def avatar(self, size):
 
-        digest = md5(self.id.lower().encode('utf-8')).hexdigest()
+        digest = md5(str(self.id).lower().encode('utf-8')).hexdigest()
 
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
@@ -126,6 +141,19 @@ class Event(db.Model):
 
         return '#{}: user {} listened to {}'.format(self.id, self.user_id, self.track_id)
 
+    def to_dict(self):
+
+        return {
+            "id": self.id,
+            "city_id": self.city_id,
+            "track_id": self.track_id,
+            "country_id": self.country_id,
+            "month": self.month,
+            "weekend": self.weekend,
+            "season": self.season,
+            "rating": self.rating
+        }
+
 
 class Country(db.Model):
 
@@ -134,7 +162,7 @@ class Country(db.Model):
 
     def __repr__(self):
 
-        return '#{}: {}'.format(self.id, self.name)
+        return '{}'.format(self.name)
 
 
 class City(db.Model):

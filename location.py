@@ -1,10 +1,14 @@
 import requests
 
-from config import IPINFO_TOKEN
+from config import Config
 
-r = requests.get("https://ipinfo.io?", headers={
-    "Authorization": "Bearer {}".format(IPINFO_TOKEN),
-    "Accept": "application/json"
-})
+config = Config()
 
-location = r.json()
+def get_location():
+
+    r = requests.get("https://ipinfo.io?", headers={
+        "Authorization": "Bearer {}".format(config.IPINFO_TOKEN),
+        "Accept": "application/json"
+    })
+
+    return r.json()

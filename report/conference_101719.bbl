@@ -1,0 +1,139 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{abowd_et_al_1999}{article}{}
+      \name{author}{6}{}{%
+        {{hash=c1ca8e8fb08ff442d00a1bc25094660c}{%
+           family={Abowd},
+           familyi={A\bibinitperiod},
+           given={Gregory\bibnamedelima D.},
+           giveni={G\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=383a958e7dc63d5a57bbeec2a4e3ac93}{%
+           family={Dey},
+           familyi={D\bibinitperiod},
+           given={Anind\bibnamedelima K.},
+           giveni={A\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=437b7e313c9cc96f99bd5cdb16235be9}{%
+           family={Brown},
+           familyi={B\bibinitperiod},
+           given={Peter\bibnamedelima J.},
+           giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=1b7c40e5324a83a9a8df40fb8e6e786e}{%
+           family={Davies},
+           familyi={D\bibinitperiod},
+           given={Nigel},
+           giveni={N\bibinitperiod}}}%
+        {{hash=b54f505a6510ce7238c6c7404c4efdee}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+        {{hash=fef4cacc48e9e609a737fd2973a12918}{%
+           family={Steggles},
+           familyi={S\bibinitperiod},
+           given={Pete},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{7c6160d8749127640a35e15f924d83b0}
+      \strng{fullhash}{4428157a3495732af69ec38e2eec6904}
+      \strng{bibnamehash}{7c6160d8749127640a35e15f924d83b0}
+      \strng{authorbibnamehash}{7c6160d8749127640a35e15f924d83b0}
+      \strng{authornamehash}{7c6160d8749127640a35e15f924d83b0}
+      \strng{authorfullhash}{4428157a3495732af69ec38e2eec6904}
+      \field{sortinit}{A}
+      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Handheld and Ubiquitous Computing}
+      \field{title}{Towards a Better Understanding of Context and Context-Awareness}
+      \field{year}{1999}
+      \field{pages}{304\bibrangedash 307}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1007/3-540-48157-5_29
+      \endverb
+    \endentry
+    \entry{baltrunas_et_al_2011}{article}{}
+      \name{author}{3}{}{%
+        {{hash=0ef7dd2efd526493951ed30120da31b6}{%
+           family={Baltrunas},
+           familyi={B\bibinitperiod},
+           given={Linas},
+           giveni={L\bibinitperiod}}}%
+        {{hash=ff3d0ccbe37a2532fd8f7bf4eea0d143}{%
+           family={Ludwig},
+           familyi={L\bibinitperiod},
+           given={Bernd},
+           giveni={B\bibinitperiod}}}%
+        {{hash=5abb1d77d80f46918651a5bbc5ee8371}{%
+           family={Ricci},
+           familyi={R\bibinitperiod},
+           given={Francesco},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{6d9f483521692259ef85d965729f251c}
+      \strng{fullhash}{6d9f483521692259ef85d965729f251c}
+      \strng{bibnamehash}{6d9f483521692259ef85d965729f251c}
+      \strng{authorbibnamehash}{6d9f483521692259ef85d965729f251c}
+      \strng{authornamehash}{6d9f483521692259ef85d965729f251c}
+      \strng{authorfullhash}{6d9f483521692259ef85d965729f251c}
+      \field{sortinit}{B}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the fifth ACM conference on Recommender systems - RecSys '11}
+      \field{title}{Matrix factorization techniques for context aware recommendation}
+      \field{year}{2011}
+      \verb{doi}
+      \verb 10.1145/2043932.2043988
+      \endverb
+    \endentry
+    \entry{schedl_2013}{article}{}
+      \name{author}{1}{}{%
+        {{hash=28b51640509c48a3b9b4bbbb0b26c578}{%
+           family={Schedl},
+           familyi={S\bibinitperiod},
+           given={Markus},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{28b51640509c48a3b9b4bbbb0b26c578}
+      \strng{fullhash}{28b51640509c48a3b9b4bbbb0b26c578}
+      \strng{bibnamehash}{28b51640509c48a3b9b4bbbb0b26c578}
+      \strng{authorbibnamehash}{28b51640509c48a3b9b4bbbb0b26c578}
+      \strng{authornamehash}{28b51640509c48a3b9b4bbbb0b26c578}
+      \strng{authorfullhash}{28b51640509c48a3b9b4bbbb0b26c578}
+      \field{sortinit}{S}
+      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Lecture Notes in Computer Science}
+      \field{title}{Leveraging Microblogs for Spatiotemporal Music Information Retrieval}
+      \field{year}{2013}
+      \field{pages}{796\bibrangedash 799}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1007/978-3-642-36973-5_87
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

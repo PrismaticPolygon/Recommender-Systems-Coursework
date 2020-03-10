@@ -26,9 +26,10 @@ The system has been tested with Python 3.6. To run locally:
     * `cd ../..`
 * Install the required packages using `pip install -r requirements.txt`.
 * Download data using `python load.py`.
-* Calculate context weights and predictions using `python recommender.py`. This may take some time!
+* Context weights and predictions are included, but may be calculated using `python recommender.py`. This may take some time!
 * Initialise the database using `flask db upgrade`.
 * Fill the database using `python import.py`. This may take some time!
 * Run using `flask run`.
 * Navigate to `127.0.0.1/5000`. This page is simply a list of all tracks.
 * Navigate to `127.0.0.1/5000/user/<user-id>` to see user-specific recommendations.
+* Run `python benchmark.py` to calculate benchmark values.

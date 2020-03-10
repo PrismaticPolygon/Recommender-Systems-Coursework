@@ -40,7 +40,7 @@ print("Number of false negatives: {}".format(FN))
 print("")
 
 accuracy = TP / (TP + FP)
-recall = TP / (TP + TN)
+recall = TP / (TP + FN)
 
 print("Accuracy: {}".format(accuracy))
 print("Recall: {}".format(recall))

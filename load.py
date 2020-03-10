@@ -37,6 +37,7 @@ df = df.dropna()
 df = df.drop_duplicates()
 
 # Sort by frequency: https://stackoverflow.com/questions/44363585/sort-by-frequency-of-values-in-a-column-pandas
+# This is much faster than the top answer
 frequencies = df["user-id"].value_counts().to_dict()
 df["frequency"] = df["user-id"].map(frequencies)
 df = df.sort_values("frequency", ascending=False)

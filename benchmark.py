@@ -23,10 +23,3 @@ mae_b = np.mean(df.apply(lambda row: row["rating"] - row["prediction"] - context
 print("MAE with context: {}".format(mae_b))
 
 print("Improvement: {:.2f}%".format(100 * (mae_b - mae) / mae))
-
-# Let's call it a difference of... 50%. I suspect we can afford to be harsh.
-# But we will have to join up P appropriately. And we did! We don't have context for our predictions, hence the duplicates. 
-
-# We need to compute precision and recall.
-# Precision is true positives / all positives.
-# This is prediction territory. So we need the P.

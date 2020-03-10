@@ -1,52 +1,33 @@
-# Recommender-Systems-Coursework
+# Recommender Systems Coursework
 
-Develop a context-aware recommender system (CARS) music application. Material for Web Technologies can be re-used. 
+Develop a context-aware recommender system (CARS) music application. This project re-uses the web app developed for
+Web Technology. It uses the [MusicMicro](http://www.cp.jku.at/datasets/musicmicro/index.html) dataset, and a physical 
+context comprising three factors: country, whether or not it is a weekend, and the season.
 
-### Context
+## Structure
 
-A context is "any information useful to characterise the situation of an entity (e.g. a user or an item) that can affect
-the way users interact with systems" (Abowd et al., 1999). It is a set of factors that delineate conditions under which 
-a user-item pair is assigned a rating. 
+* `load.py`: downloads, processes, and saves the MusicMicro dataset for use in the DB and SVD.
+* `recommender.py`: generates recommendations. Uses SVD followed by `SciPy` optimisation to compute a context-weight
+matrix (CAMF-C style). Saves two files to `weights`: the context parameters themselves, and the DataFrame of 
+predictions.
+* `benchmark.py`: calculates benchmarks for use in report.
+* `config.py`: contains config settings for the DB and geolocation.
+* `location.py`: contains a simple function to retrieve the user's country from their IP address, 
+using [ipinfo.io](https://ipinfo.io/developers).
+* `web.py`: entry point for Flask application, found in `app`.
 
-There are four types of context:
-* Physical: time, position, user's activity, weather, light, temperature
-* Social: presence and role of other people around
-* Interaction media: device used, type of media browsed
-* Modal: user's mood, personality, purpose
+## Running
 
-### Datasets
-
-Potential datasets:
-* [MusicMicro](http://www.cp.jku.at/datasets/musicmicro/index.html)
-* [FMA](https://archive.ics.uci.edu/ml/datasets/FMA%3A+A+Dataset+For+Music+Analysis)
-* [#nowplaying-RS](https://zenodo.org/record/3248543#.XlelyG52vxB)
-
-As MusicMicro is the simplest, I have used that one. As the dataset is rather limited, using the physical context is my
-only option.
-
-
-Nah. Include migrations.
-
-### Task
-
-Research, select, justify, and apply to your system techniques for:
-* Feature extraction and selection (consider user data, item data, and context)
-* 2D / MD recommender techniue (user profiling/modelling)
-* Contextual recommendation generation: contextual information filtering / modelling (e.g. pre- or post-filtering, neural collaborative filtering)
-
-UI: develop a simple UI for your application. This can be a Python script. Showcase:
-* how does the system recognise the active user? Which user data is gathered - explicit / implicit?
-* Output: how are recommendations and/or predictions presented to the user?
-
-### Geolocation
-
-Location data is automatically retrieved from IP address using [ipinfo.io](https://ipinfo.io/developers).
-
-### Resources
-
-* Tutorial on mood [here](https://neokt.github.io/projects/audio-music-mood-classification/)
-* Cutting-edge paper [here](https://arxiv.org/abs/1909.03999)
-* Presentation [here](https://www.slideshare.net/irecsys/tutorial-context-in-recommender-systems)
-* Maths [here](http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/)
-* Good slides [here](https://www.slideshare.net/irecsys/tutorial-context-awarerecommendationumap2013)
-* Recommender tutorial [here](https://beckernick.github.io/matrix-factorization-recommender/)
+The system has been tested with Python 3.6. To run locally:
+* Create a virtual environment using `python -m venv venv`
+* Activate the virtual environment by:
+    * `cd venv/Scripts`
+    * `activate`
+    * `cd ../..`
+* Install the required packages using `pip install -r requirements.txt`
+* Initialise the database using `flask db upgrade`
+* Fill the database using `python import.py`
+* Calculate context weights and predictions using `python recommender.py`
+* Run using `flask run`
+* Navigate to `127.0.0.1/5000`. This page is simply a list of all tracks.
+* Navigate to `127.0.0.1/5000/user/<user-id>` to see user-specific recommendations.

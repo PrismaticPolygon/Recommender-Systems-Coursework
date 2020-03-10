@@ -123,6 +123,8 @@ Many of the limitations in this coursework are due to the simplicity of the data
 
 \item{SVD is only performed once. WIth a limited dataset, and a constrained number of users ($100$), it is possible to perform SVD live, after every user rating, to update recommendations appropriately. However, without the functionality for users to rate songs, doing so is pointless.}
 \item{Contextual information is limited. A consequence of the dataset. In \cite{baltrunas_et_al_2011}, the music dataset is evaluated using $8$ contextual factors and $27$ contextual conditions. In this coursework, the inclusion of countries increased the number of contextual conditons to approximately $35$, with only $4$ contextual factors: \verb|weekend|, \verb|season|, \verb|month|, and \verb|country|. Even so, results show a marked decrease in MAE.}
+\item{Countries are not one-hot encoded}. There is no inherent order in the numerical ID of a country, and so no underlying pattern for a weight to be optimised for. This means that the impact of the country contextual condition must be viewed as dubious at best.
+\item{It was not possible to categorise tracks}. This permitted only the use of CAMF-C, the most basic type. CAMF-CC (with weights per item \textit{category} and contextual condition) is believed to be the most accurate.
 
 \end{itemize}
 

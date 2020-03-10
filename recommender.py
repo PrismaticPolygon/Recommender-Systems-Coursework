@@ -48,9 +48,6 @@ if __name__ == "__main__":
     # Pivot so that we have one row per user and one column per track.
     R = df.pivot_table(index="user_id", columns="track_id", values='rating').fillna(0)
 
-    # That will be changed the dtype.
-    # After all, they are all ones and zeros...
-
     # Normalise by users' means and convert to NumPy array. Differs from source code; see comment section.
     mean = np.array(R.mean(axis=1))
     demeaned = R.sub(mean, axis=0).fillna(0).values
@@ -60,8 +57,6 @@ if __name__ == "__main__":
 
     print("Number of latent dimensions d = {}".format(d))
     print("")
-
-    # It's P, not R!
 
     V, SIGMA, Q = svds(demeaned, k=d)
 
@@ -85,15 +80,6 @@ if __name__ == "__main__":
     P.index.name = "user_id"
     P = P.reset_index()
     P = pd.melt(P, id_vars=["user_id"], var_name="track_id", value_name="prediction")
-
-    print(P)
-
-    # Merge actual ratings onto P. Fill un-rated (i.e. unlistened to) events with 0
-    # P = P.merge(df, on=["user_id", "track_id"], how="left").fillna(0)
-
-    # Merge onto original DataFrame.
-    df = df.merge(P, on=["user_id", "track_id"])
-
 
     # np.sum(V * V, axis=(1, 0)) is the sum (axis=0) of the row-wise (axis=1) dot product of V
     # https://stackoverflow.com/questions/15616742/vectorized-way-of-calculating-row-wise-dot-product-two-matrices-with-scipy

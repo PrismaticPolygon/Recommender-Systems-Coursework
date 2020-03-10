@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
 
@@ -20,40 +21,61 @@
 
     <h2> {{ "Contexts" }}</h2>
 
-<!--    <select name= colours method="GET" action="/">-->
+    <div class="row">
 
-<!--        {% for colour in [0, 1] %}-->
+        {{ wtf.quick_form(context_form) }}
 
-<!--            <option value= "{{colour}}" SELECTED>{{colour}}</option>"-->
+    </div>
 
-<!--        {% endfor %}-->
-<!--    </select>-->
+    <h2> {{ "Recommendations" }} </h2>
 
-    <form action='/' method='POST'>
+    <table class="table">
 
-        {{form.hidden_tag() }}
+        <tr>
 
-        <button class="btn btn-info btn-md dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="color_dropdown" >
-            Select Color
-            <span class="caret"></span>
-            </button>
+           <th>{{ "ID" }}</th>
 
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <th>{{ "Track" }}</th>
 
-        {% for subfield in form.choices %}
+            <th>{{ "Artist" }}</th>
 
-              <a class="dropdown-item" href="#">
-                {{ subfield.label }}
-              </a>
+            <th>{{ "Prediction" }}</th>
+
+        </tr>
+
+        {% for recommendation in recommendations %}
+
+            <tr>
+
+                <td>
+
+                    {{ recommendation.track_id }}
+
+                </td>
+
+                 <td>
+
+                    {{ recommendation.name }}
+
+                </td>
+
+                  <td>
+
+                    {{ recommendation.artist }}
+
+                </td>
+
+                <td>
+
+                    {{ recommendation.value }}
+
+                </td>
+
+            </tr>
 
         {% endfor %}
-        </div>
 
-        <div class="submit">
-            {{ form.submit(class="btn btn-info") }}
-        </div>
-
-    </form>
+    </table>
 
     <h2> {{ "Listening events" }} </h2>
 

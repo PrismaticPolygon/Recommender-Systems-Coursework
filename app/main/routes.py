@@ -6,7 +6,7 @@ from app import db
 # from app.main.forms import RateBookForm, DeleteRatingForm
 from app.models import Track, User, Country
 from app.main import bp
-from app.main.forms import CountryForm
+from app.main.forms import ContextForm
 from load import weekend, season
 from location import get_location
 # from app.auth.forms import DeleteUserForm
@@ -20,36 +20,34 @@ def index():
     return render_template('index.html', title='Home', tracks=tracks)
 
 
-@bp.route("/compare/", methods=["GET"])
-def compare():
-
-    pass
-
-    # tests = request.args.getlist('tests')
-
-
-
-
 @bp.route('/user/<id>', methods=["GET", "POST"])
 def user(id):
 
     user = User.query.filter_by(id=id).first_or_404()
 
-    country_form = CountryForm()
+    context_form = ContextForm()
 
-    if country_form.validate_on_submit():
+    # Not a valid choice for this field? That doesnt' make sense.
 
-        country_choice = country_form.options.data
+    if context_form.validate_on_submit():
 
-        print(country_choice)
+        context = {
+            "country": context_form.country_options.data[0],
+            "season": context_form.season_options.data[0],
+            "weekend": context_form.weekend_options.data[0]
+        }
+
+        recommendations = user.get_recommendations(context)
+
+    # I don't want to reload the page, though.
 
     events = user.get_events()
 
-
-    recommendations = user.get_recommendations(None)
+    recommendations = user.get_recommendations()
 
     return render_template('user.html',
                            title=user.id,
                            user=user,
-                           country_form=country_form,
+                           recommendations=recommendations,
+                           context_form=context_form,
                            events=events)

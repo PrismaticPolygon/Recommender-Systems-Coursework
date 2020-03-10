@@ -4,13 +4,9 @@ import numpy as np
 
 from hashlib import md5
 from app import db
-from config import Config
 
-
-P = pd.read_csv(os.path.join("weights", "P.csv"), index_col="user_id")
-B = np.load(os.path.join("weights", "B.npy"))
-
-# config = Config()
+P = pd.read_csv(os.path.join("weights", "P.csv"))   # Predictions matrix
+B = np.load(os.path.join("weights", "B.npy"))       # Context weight matrix
 
 
 class User(db.Model):
@@ -22,13 +18,6 @@ class User(db.Model):
     def __repr__(self):
 
         return '#{}: {}'.format(self.id, self.username)
-
-    # Nah. Too long. I'd have to maintain a sparse matrix in the background.
-    # Perhaps I could just update rows? No: it's not important.
-    # As we're not going to be adding new tracks or users, it's all Gucci.
-    # And I could, in fact, update R.
-    # Load up R.
-
 
     def get_events(self):
 
@@ -55,66 +44,44 @@ class User(db.Model):
 
     def get_recommendations(self, context=None, num_recommendations=10):
 
-        # events = pd.read_sql(self.events, config.SQLALCHEMY_DATABASE_URI)
-        events = pd.DataFrame([event.to_dict() for event in self.events.all()])
+        tracks = [x[0] for x in self.events.with_entities(Event.track_id).all()]    # IDs of tracks already rated
 
-        # Bruh
+        predictions = P[P["user_id"] == self.id].sort_values(by="prediction", ascending=False)   # Get all user predictions
+        predictions = predictions[~predictions["track_id"].isin(tracks)]                         # Remove tracks already seen
+        predictions = predictions.dropna()                                                       # Shouldn't be any, but just in case
 
-        predictions = pd.DataFrame(P.iloc[self.id].sort_values(ascending=False)).reset_index()  # Get predictions for that user.
+        if context:
 
+            weight = 0
 
-        # Strange.
+            for i, key in enumerate(context):
 
-        print(predictions)
+                weight += B[i, context[key]]
 
-        # # Then merge onto event details. Not ideal having these backing DFs!
-        #
-        # # So what's the purpose of events again?
-        #
-        # if context:     # Otherwise multiply with context-weight matrix
-        #
-        #     pass
-        #
-        # predictions = predictions.dropna()
-        #
-        # return predictions[:num_recommendations]
+            predictions["prediction"] += weight
 
-    #
-    #     ratings = pd.DataFrame([rating.to_dict() for rating in self.ratings.all()])
-    #
-    #     if ratings.empty:    # Return some random books
-    #
-    #         recommendations = books_df.sample(n=num_recommendations)
-    #
-    #         recommendations["value"] = "No data available"
-    #         recommendations["genres"] = recommendations["genres"].str.replace("|", ", ")
-    #
-    #         return recommendations.to_dict("records")
-    #
-    #     user_predictions = pd.DataFrame(predictions_df.iloc[self.id - 1].sort_values(ascending=False)).reset_index()
-    #     user_predictions.columns = ["book_id", "value"]
-    #
-    #
-    #     print("USER PREDICTIONS\n")
-    #     print(user_predictions)
-    #
-    #     user_full = ratings.merge(books_df, how='left', on='book_id').sort_values('value', ascending=False)
-    #
-    #     # Remove books that the user has already rated
-    #     books_df = books_df[~books_df['book_id'].isin(user_full['book_id'])]
-    #
-    #     print("BOOKS\n")
-    #     print(books_df)
-    #
-    #     recommendations = books_df.merge(user_predictions, how='left', on='book_id').sort_values('value', ascending=False)
-    #     recommendations = recommendations[~recommendations["value"].isna()].iloc[:num_recommendations]
-    #     recommendations["genres"] = recommendations["genres"].str.replace("|", ", ")
-    #     recommendations["value"] = recommendations["value"].map(lambda x: "{0:.2f}".format(x))
-    #
-    #     print("RECOMMENDATIONS\n")
-    #     print(recommendations)
-    #
-    #     return recommendations.to_dict("records")
+        predictions = predictions[:num_recommendations]
+        predictions["prediction"] = predictions["prediction"].map(lambda x: "{:.3f}".format(x))
+
+        records = []
+
+        # SQLAlchemy is fucking garbage. I don't have a damn clue how this query should be written.
+        for row in predictions.itertuples():
+
+            track_id = row[2]
+            value = row[-1]
+
+            track = Track.query.get(track_id)
+            artist = Artist.query.get(track.artist_id)
+
+            records.append({
+                "track_id": track_id,
+                "name": track.name,
+                "artist": artist.name,
+                "value": value
+            })
+
+        return records
 
     def avatar(self, size):
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7300 64-bit) (preloaded format=pdflatex 2020.2.12)  9 MAR 2020 10:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7300 64-bit) (preloaded format=pdflatex 2020.2.12)  10 MAR 2020 16:22
 entering extended mode
 **./conference_101719.tex
 (conference_101719.tex
@@ -302,29 +302,30 @@ Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 24.
 
+LaTeX Warning: Citation `abowd_et_al_1999' on page 1 undefined on input line 26
+.
+
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 3
+6.
+("C:\Users\domwh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\ot1pcr.fd"
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line 36.
 
 ("C:\Users\domwh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 24.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 36.
 
 ("C:\Users\domwh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
-LaTeX Warning: Citation `abowd_et_al_1999' on page 1 undefined on input line 28
-.
+LaTeX Warning: Citation `schedl_2013' on page 1 undefined on input line 36.
 
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 4
-2.
-("C:\Users\domwh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\ot1pcr.fd"
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-)
-Underfull \hbox (badness 10000) in paragraph at lines 111--112
-[]\OT1/ptm/m/n/10 Code for these cal-cu-la-tions may be found in
- []
+
+LaTeX Warning: Citation `schedl_2013' on page 1 undefined on input line 42.
 
 [1{C:/Users/domwh/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
@@ -332,7 +333,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 111--112
 ]
 
 LaTeX Warning: Citation `baltrunas_et_al_2011' on page 2 undefined on input lin
-e 125.
+e 123.
 
 
 ** Conference Paper **
@@ -345,21 +346,19 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[2
-
-] (conference_101719.aux)
+[2] (conference_101719.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 3872 strings out of 481565
- 56619 string characters out of 2914159
- 301880 words of memory out of 3000000
- 19080 multiletter control sequences out of 15000+200000
+ 3873 strings out of 481565
+ 56632 string characters out of 2914159
+ 300880 words of memory out of 3000000
+ 19081 multiletter control sequences out of 15000+200000
  568586 words of font info for 96 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 30i,8n,37p,506b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 30i,8n,37p,731b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/domwh/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc
 }<C:/Users/domwh/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/
 cm/cmex10.pfb><C:/Users/domwh/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
@@ -375,7 +374,7 @@ e1/urw/courier/ucrr8a.pfb><C:/Users/domwh/AppData/Local/Programs/MiKTeX 2.9/fon
 ts/type1/urw/times/utmb8a.pfb><C:/Users/domwh/AppData/Local/Programs/MiKTeX 2.9
 /fonts/type1/urw/times/utmr8a.pfb><C:/Users/domwh/AppData/Local/Programs/MiKTeX
  2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on conference_101719.pdf (2 pages, 131583 bytes).
+Output written on conference_101719.pdf (2 pages, 138082 bytes).
 PDF statistics:
  58 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

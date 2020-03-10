@@ -79,7 +79,19 @@ if __name__ == "__main__":
     P = pd.DataFrame(P)
     P.index.name = "user_id"
     P = P.reset_index()
+
     P = pd.melt(P, id_vars=["user_id"], var_name="track_id", value_name="prediction")
+
+    # Added predictions to DF for benchmarking
+    df = df.merge(P, on=["user_id", "track_id"])
+
+    # Add actual ratings to P
+    P = P.merge(df[["user_id", "track_id", "rating"]], on=["user_id", "track_id"], how="outer")
+    P["rating"] = P["rating"].fillna(0)
+
+    # Save to file
+    P.to_csv(os.path.join("weights", "P.csv"), index=False)
+    df.to_csv(os.path.join("weights", "df.csv"), index=False)
 
     # np.sum(V * V, axis=(1, 0)) is the sum (axis=0) of the row-wise (axis=1) dot product of V
     # https://stackoverflow.com/questions/15616742/vectorized-way-of-calculating-row-wise-dot-product-two-matrices-with-scipy
@@ -109,7 +121,6 @@ if __name__ == "__main__":
         os.mkdir("weights")
 
     np.save(os.path.join("weights", "B"), B)
-    P.to_csv(os.path.join("weights", "P.csv"), index=False)
 
     with open(os.path.join("weights", "log.txt"), "w") as log:
 

@@ -3,4 +3,5 @@ data
 config.py
 venv
 logs
+weights
 *.db

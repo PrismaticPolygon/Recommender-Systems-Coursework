@@ -21,15 +21,9 @@
 
 \subsection{Domain}
 
-A recommender system (RS) seeks to predict the 'rating' that a user would given to an item. They rose to prominence after the publicity of the Netflix Prize \footnote{https://netflixprize.com/}, which sought to improve recommendations on Netflix's platform by $10\%$. 
-
-There are many flavours of RS: content-based, collaborative, knowledge-based, context-aware, \textit{e.t.c}. This coursework is concerned with context-aware recommender systems (CARS). 
+A recommender system (RS) seeks to predict the 'rating' that a user would given to an item. There are many flavours of RS: content-based, collaborative, knowledge-based, context-aware, \textit{e.t.c}. This coursework is concerned with context-aware recommender systems (CARS). 
 
 A context is \textit{"any information useful to characteristize the situation of an entity (e.g. a user or an item) that can affect the way users interact with systems"} \cite{abowd_et_al_1999}. User preferences, and therefore ratings, may differ from one context to another. Context types include physical, social, and modal (i.e. pertaining to mood). 
-
-\subsection{Related work review}
-
-RS are increasingly well studied. The seminal paper on context-aware recommender systems (CARS) was \textit{Matrix F}
 
 \subsection{Purpose / aim}
 
@@ -39,31 +33,55 @@ The purpose of this coursework is to develop a CARS. The focus is on the impleme
 
 \subsection{Data type, source}
 
-The dataset used is \verb|MusicMicro| \footnote{http://www.cp.jku.at/datasets/musicmicro/index.html}.
+The dataset used is \verb|MusicMicro| \footnote{http://www.cp.jku.at/datasets/musicmicro/index.html} \cite{schedl_2013}. \verb|MusicMicro| is relatively simple. It consists of users, artists, cities, countries, tracks, and events, which join them all together. A user $u$ listens to a track $i$ by artist $a$ in a country $c_o$ and a city $c_i$. Also included is temporal metadata: the day of the week, and month of the year, that the listening event took place. Importantly, songs are not assigned \textit{ratings}, per se. The 'rating' is binary: whether a song was listened to or not. A prediction, therefore, lies in $[0, 1]$.
 
-Talk about user data considered, item data considered, and context select.
-
-As the \verb|MusicMicro| dataset is rather limited, the only available context is \textit{physical}. The phyiscal context comprises spatiotemporal data such as time, location, activity, and environmental conditions. 
-
-Importantly, songs are not assigned \textit{ratings}, per se. The 'rating' is binary: whether a song was listened to or not. The problem is therefore one of classification, rather than regression.
-
-
-Only the top $100$ most active users - those with the most recommendations - were used in order to constrain the time taken to calculate recommendations.
-
-This has the side-effect of negating the 'cold start' problem.  As the focus of this coursework is on CARS, rather than tackling this problem, this was deemed an acceptable simplification of the problem. 
+No user metadata is available. As the \verb|MusicMicro| dataset is rather limited, the only available context is \textit{physical}. The phyiscal context comprises spatiotemporal data such as time, location, activity, and environmental conditions. In the \verb|MusicMicro| dataset, this corresponds to the country and city in which the listening event took place and the day of the week, and month of the year that it occurred.
 
 \subsection{Feature extraction and selection methods}
 
-I suppose this becomes a matter of pre-processing
+Feature selection was based on the author's finding in \cite{schedl_2013}, in which the city the song was listened to, and the day of the week it was listened to, proved to be poor predictors. Instead, broader categories are used: whether or not the listening event occurred on a weekend, the country the event took place in, and the season during which it occurred. 
 
 \subsection{User profiling and prediction methods}
 
-Prediction uses singular value decomposition (SVD), with the number of latent factors $k = 25$. SVD seeks to decompose a ratings matrix $R$ into two singular value matrices, $V$ and $Q$, such that $R$
+Only the top $100$ most active users - those with the most recommendations - were used in order to constrain the time taken to calculate recommendations. This has the convenient side-effect of negating the 'cold start' problem. Prediction uses singular value decomposition (SVD), with the number of latent factors $k = 25$. SVD seeks to decompose a ratings matrix $R$ into two singular value matrices, $V$ and $Q$, such that $R \approx V \times Q^T \Sigma = \hat{R}$.
 
-User profiling is simple.
-The top $10$ recommendations are presented to the user. 
+Users cannot be profiled save by their listening events.
 
 \subsection{Evaluation methods}
+
+The performence of the CARS will be evaluated on ratings prediction accuracy using mean absolute error (MAE)
+
+\begin{center}
+
+$MAE = \frac{1}{|\tau|} \sum_{(u, i) \in \tau} |\hat{r}_{ui} - r_{ui}|$
+
+\end{center} 
+
+and mean absolute error with context (MAE\textsubscript{B}):
+
+\begin{center}
+
+$MAE_B = \frac{1}{|\tau|} \sum_{(u, i) \in \tau} |\hat{r}_{ui} - r_{ui} - \sum_{j=1}^{k} B_{jc_j}|$
+
+\end{center}
+
+It will be evaluated on usage prediction accuracy using precision:
+
+\begin{center}
+
+$precision = \frac{TP}{TP + FP}$
+
+\end{center}
+
+and recall:
+
+\begin{center}
+
+$recall = \frac{TP}{TP + TN}$
+
+\end{center}
+
+where $TP$ is the number of true positives, $FP$ is the number of false positives, and $TN$ is the number of true negatives.
 
 \section{Implementation}
 
@@ -87,31 +105,11 @@ Recommendations are displayed on a simple website originally developed for the S
 
 The physical context is easy to implicitly retrieve. In this instance, the user's IP address is used to calculate location, and temporal information can be similarly easily obtained. Drop-downs are provided to allow user selection of contextual conditions for testing. 
 
-User characteristics are by and large irrelevant. With no frame of reference in the original dataset, it is impossible to learn contextual parameters for fields such as age or device used. 
-
-
 \section{Evaluation results}
 
-Mean absolute error (MAE) was calculated as $0.219$ using:
+MAE was calculated as $0.222$. MAE\textsubscript{B} was calculated as $0213$, a reduction of over $4.59\%$. 
 
-\begin{center}
-
-$\frac{1}{|\tau|} \sum_{(u, i) \in \tau} |\hat{r}_{ui} - r_{ui}|$
-
-\end{center} 
-
-MAE \textit{with} context (MAE\textsubscript{B}) was calculated as $0.048$, a reduction of over $78\%$, using:
-
-\begin{center}
-
-$\frac{1}{|\tau|} \sum_{(u, i) \in \tau} |\hat{r}_{ui} - r_{ui} - \sum_{j=1}^{k} B_{jc_j}|$
-
-\end{center}
-
-Code for these calculations may be found in \verb|benchmark.py|.
-
-And accuracy of usage predictions (precision, recall)
-
+There were 3336 true positives, 0 false positives, 21486 true negatives, and 100 false negatives, leading to an accuracy of $1$ and a recall of $0.134$.
 
 \section{Conclusion}
 
@@ -122,9 +120,10 @@ Many of the limitations in this coursework are due to the simplicity of the data
 \begin{itemize}
 
 \item{SVD is only performed once. WIth a limited dataset, and a constrained number of users ($100$), it is possible to perform SVD live, after every user rating, to update recommendations appropriately. However, without the functionality for users to rate songs, doing so is pointless.}
-\item{Contextual information is limited. A consequence of the dataset. In \cite{baltrunas_et_al_2011}, the music dataset is evaluated using $8$ contextual factors and $27$ contextual conditions. In this coursework, the inclusion of countries increased the number of contextual conditons to approximately $35$, with only $4$ contextual factors: \verb|weekend|, \verb|season|, \verb|month|, and \verb|country|. Even so, results show a marked decrease in MAE.}
-\item{Countries are not one-hot encoded}. There is no inherent order in the numerical ID of a country, and so no underlying pattern for a weight to be optimised for. This means that the impact of the country contextual condition must be viewed as dubious at best.
+\item{Contextual information is limited. A consequence of the dataset. In \cite{baltrunas_et_al_2011}, the music dataset is evaluated using $8$ contextual factors and $27$ contextual conditions. In this coursework, the inclusion of countries increased the number of contextual conditons to approximately $24$ per factor, with only $3$ contextual factors: \verb|weekend|, \verb|season|, and \verb|country|. Even so, results show a marked decrease in MAE.}
+\item{Countries are not one-hot encoded. There is no inherent order in the numerical ID of a country, and so no underlying pattern for a weight to be optimised for. This means that the impact of the country contextual condition must be viewed as dubious at best. It is possible that encoding season cyclically may also have yielded better results.}
 \item{It was not possible to categorise tracks}. This permitted only the use of CAMF-C, the most basic type. CAMF-CC (with weights per item \textit{category} and contextual condition) is believed to be the most accurate.
+\item{The number of latent dimensions $k$ in SVD was chosen qualitatively. A superior implemention would use a training and test set to optimise $k$ without overfitting. That said, $k = 25$ is a reasonable estimate.}
 
 \end{itemize}
 

@@ -4,6 +4,7 @@ from config import Config
 
 config = Config()
 
+
 def get_location():
 
     r = requests.get("https://ipinfo.io?", headers={
@@ -11,4 +12,10 @@ def get_location():
         "Accept": "application/json"
     })
 
-    return r.json()
+    country = r.json()["country"]
+
+    if country == "GB":
+
+        return "United Kingdom"
+
+    return country

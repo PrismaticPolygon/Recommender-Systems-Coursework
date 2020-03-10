@@ -1,6 +1,11 @@
+import datetime
+
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, SelectMultipleField
 from wtforms.validators import DataRequired
+
+from load import season, weekend
+from location import get_location
 
 from app.models import Country
 
@@ -47,25 +52,34 @@ class ContextForm(FlaskForm):
                  (114, 'Zimbabwe')
     ]   # Cribbed from the DB
     seasons = [(1, "Spring"), (2, "Summer"), (3, "Autumn"), (0, "Winter")]   # See load.py
-    weekends = [(1, "True"), (1, "False")]
-    # months = [(0, "January"), (1, "February"), (2, "March"), (3, "April"), (4, "May"), (5, "June"), (6, "July"),
-    #           (7, "August"), (8, "September"), (9, "October"), (10, "November"), (11, "December")]
+    weekends = [(1, "True"), (0, "False")]
+
+    dt = datetime.datetime.today()
+
+    x = get_location()
+    country_id = None
+
+    for country in countries:
+
+        if country[1] == x:
+
+            country_id = country[0]
+
+    if country_id is None:  # Default to UK
+
+        country_id = 2
 
     country_options = SelectMultipleField(
-         u'Select country', choices=countries, coerce=int, validators=[DataRequired()]
+         u'Select country', choices=countries, coerce=int, validators=[DataRequired()], default=[country_id]
     )
 
     season_options = SelectMultipleField(
-        u'Select season', choices=seasons, coerce=int, validators=[DataRequired()]
+        u'Select season', choices=seasons, coerce=int, validators=[DataRequired()], default=[season(dt.month)]
     )
 
     weekend_options = SelectMultipleField(
-        u'Select weekend', choices=weekends, coerce=int, validators=[DataRequired()]
+        u'Select weekend', choices=weekends, coerce=int, validators=[DataRequired()], default=[weekend(dt.weekday())]
     )
-    #
-    # month_options = SelectMultipleField(
-    #     u'Select month', choices=months, coerce=int, validators=[DataRequired()]
-    # )
 
     submit = SubmitField('Submit')
 

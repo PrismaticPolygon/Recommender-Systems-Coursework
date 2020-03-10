@@ -1,6 +1,5 @@
 .idea
 data
-config.py
 venv
 logs
 weights

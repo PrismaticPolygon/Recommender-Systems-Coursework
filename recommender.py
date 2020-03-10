@@ -88,6 +88,7 @@ if __name__ == "__main__":
     # Add actual ratings to P
     P = P.merge(df[["user_id", "track_id", "rating"]], on=["user_id", "track_id"], how="outer")
     P["rating"] = P["rating"].fillna(0)
+    P = P.drop_duplicates()
 
     # Save to file
     P.to_csv(os.path.join("weights", "P.csv"), index=False)
@@ -109,7 +110,11 @@ if __name__ == "__main__":
 
         cost_sum = (ratings - predictions - contexts) ** 2 + LAMBDA * (regularisation + np.sum(B ** 2))
 
-        return np.sum(cost_sum)
+        res = np.sum(cost_sum)
+
+        print("{:.2f}".format(res))
+
+        return res
 
 
     result = minimize(cost, B, method="BFGS")

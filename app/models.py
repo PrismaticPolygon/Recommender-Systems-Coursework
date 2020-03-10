@@ -5,6 +5,7 @@ import numpy as np
 from hashlib import md5
 from app import db
 
+
 P = pd.read_csv(os.path.join("weights", "P.csv"))   # Predictions matrix
 B = np.load(os.path.join("weights", "B.npy"))       # Context weight matrix
 
@@ -12,7 +13,6 @@ B = np.load(os.path.join("weights", "B.npy"))       # Context weight matrix
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-
     events = db.relationship("Event", backref="user", lazy="dynamic")
 
     def __repr__(self):
@@ -68,16 +68,16 @@ class User(db.Model):
         records = []
 
         # SQLAlchemy is fucking garbage. I don't have a damn clue how this query should be written.
-        for row in predictions.itertuples():
+        for i, row in predictions.iterrows():
 
-            track_id = row[2]
-            value = row[-1]
+            track_id = row["track_id"]
+            value = row["prediction"]
 
             track = Track.query.get(track_id)
             artist = Artist.query.get(track.artist_id)
 
             records.append({
-                "track_id": track_id,
+                "track_id": int(track_id),
                 "name": track.name,
                 "artist": artist.name,
                 "value": value

@@ -23,17 +23,6 @@ def get_country_id(countries):
 
 class ContextForm(FlaskForm):
 
-    def get_country_id(self, countries):
-
-        x = get_location()
-
-        for country in self.countries:
-
-            if country[1] == x:
-                return country[0]
-
-        return 22  # Default to UK
-
     # Can't query the DB at this stage. Likely due to load order in app/__init__.py
     countries = [(14, 'Mexico'), (12, 'Japan'), (5, 'El Salvador'), (11, 'Italy'), (1, 'Canada'), (7, 'France'),
                  (9, 'Greece'), (20, 'The Netherlands'), (0, 'Brazil'), (17, 'Spain'), (3, 'China'),

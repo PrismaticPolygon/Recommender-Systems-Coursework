@@ -24,10 +24,11 @@ The system has been tested with Python 3.6. To run locally:
     * `cd venv/Scripts`
     * `activate`
     * `cd ../..`
-* Install the required packages using `pip install -r requirements.txt`
-* Initialise the database using `flask db upgrade`
-* Fill the database using `python import.py`
-* Calculate context weights and predictions using `python recommender.py`
-* Run using `flask run`
+* Install the required packages using `pip install -r requirements.txt`.
+* Download data using `python load.py`.
+* Calculate context weights and predictions using `python recommender.py`. This may take some time!
+* Initialise the database using `flask db upgrade`.
+* Fill the database using `python import.py`. This may take some time!
+* Run using `flask run`.
 * Navigate to `127.0.0.1/5000`. This page is simply a list of all tracks.
 * Navigate to `127.0.0.1/5000/user/<user-id>` to see user-specific recommendations.

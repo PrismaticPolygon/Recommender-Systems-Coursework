@@ -1,4 +1,4 @@
-2020-03-08 11:11:43,691 ERROR: Exception on /user/1 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+2020-03-10 13:34:38,460 ERROR: Exception on /user/20 [POST] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
 Traceback (most recent call last):
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,43 +12,15 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 55, in user
-    events=events)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\templating.py", line 140, in render_template
-    ctx.app,
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\asyncsupport.py", line 76, in render
-    return original_render(self, *args, **kwargs)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 1008, in render
-    return self.environment.handle_exception(exc_info, True)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 780, in handle_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\_compat.py", line 37, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\user.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block "doc"
-    {%- block html %}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block "html"
-    {% block body -%}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block "body"
-    {% block content -%}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\base.html", line 44, in block "content"
-    {% block app_content %}{% endblock %}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\user.html", line 34, in block "app_content"
-    {{form.hidden_tag() }}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 430, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'form' is undefined
-2020-03-08 11:16:48,481 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
-2020-03-08 11:17:59,379 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
-2020-03-08 11:18:24,065 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
-2020-03-08 11:18:47,295 ERROR: Exception on /user/1 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 38, in user
+    recommendations = user.get_recommendations(context_form.to_context())
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 61, in get_recommendations
+    weight += B[i, context[key]]
+IndexError: index 42 is out of bounds for axis 1 with size 24
+2020-03-10 13:46:42,740 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:48:08,107 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:49:52,288 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:50:13,844 ERROR: Exception on /user/20 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
 Traceback (most recent call last):
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -62,36 +34,10 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 55, in user
-    events=events)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\templating.py", line 140, in render_template
-    ctx.app,
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\asyncsupport.py", line 76, in render
-    return original_render(self, *args, **kwargs)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 1008, in render
-    return self.environment.handle_exception(exc_info, True)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 780, in handle_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\_compat.py", line 37, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\user.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block "doc"
-    {%- block html %}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block "html"
-    {% block body -%}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block "body"
-    {% block content -%}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\base.html", line 44, in block "content"
-    {% block app_content %}{% endblock %}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\user.html", line 34, in block "app_content"
-    {{form.hidden_tag() }}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 430, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'form' is undefined
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 38, in user
+    recommendations = user.get_recommendations(context_form.to_context())
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 63, in get_recommendations
+    print(context + " -> " + weight)
+TypeError: unsupported operand type(s) for +: 'dict' and 'str'
+2020-03-10 13:50:46,183 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:51:34,026 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]

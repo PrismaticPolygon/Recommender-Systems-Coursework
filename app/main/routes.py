@@ -27,23 +27,15 @@ def user(id):
 
     context_form = ContextForm()
 
-    # Not a valid choice for this field? That doesnt' make sense.
-
     if context_form.validate_on_submit():
 
-        context = {
-            "country": context_form.country_options.data[0],
-            "season": context_form.season_options.data[0],
-            "weekend": context_form.weekend_options.data[0]
-        }
-
-        recommendations = user.get_recommendations(context)
+        recommendations = user.get_recommendations(context_form.to_context())
 
     # I don't want to reload the page, though.
 
     events = user.get_events()
 
-    recommendations = user.get_recommendations()
+    recommendations = user.get_recommendations(context_form.to_context())
 
     return render_template('user.html',
                            title=user.id,

@@ -60,6 +60,8 @@ class User(db.Model):
 
             predictions["prediction"] += weight
 
+            print("{} -> {}".format(context, weight))
+
         predictions = predictions[:num_recommendations]
         predictions["prediction"] = predictions["prediction"].map(lambda x: "{:.3f}".format(x))
 

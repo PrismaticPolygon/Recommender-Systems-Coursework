@@ -1,12 +1,4 @@
-2020-03-08 11:04:29,933 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
-2020-03-08 11:04:34,921 ERROR: Exception on /user/1 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
-Traceback (most recent call last):
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\sqlalchemy\engine\base.py", line 978, in execute
-    meth = object_._execute_on_connection
-AttributeError: 'AppenderBaseQuery' object has no attribute '_execute_on_connection'
-
-During handling of the above exception, another exception occurred:
-
+2020-03-10 13:00:34,088 ERROR: Exception on /user/20 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
 Traceback (most recent call last):
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -20,23 +12,13 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 49, in user
-    recommendations = user.get_recommendations(None)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 62, in get_recommendations
-    events = pd.read_sql(self.events, config.SQLALCHEMY_DATABASE_URI)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\pandas\io\sql.py", line 436, in read_sql
-    chunksize=chunksize,
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\pandas\io\sql.py", line 1218, in read_query
-    result = self.execute(*args)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\pandas\io\sql.py", line 1087, in execute
-    return self.connectable.execute(*args, **kwargs)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\sqlalchemy\engine\base.py", line 2182, in execute
-    return connection.execute(statement, *multiparams, **params)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\sqlalchemy\engine\base.py", line 980, in execute
-    raise exc.ObjectNotExecutableError(object_)
-sqlalchemy.exc.ObjectNotExecutableError: Not an executable object: <sqlalchemy.orm.dynamic.AppenderBaseQuery object at 0x0000025BD8125908>
-2020-03-08 11:08:02,918 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
-2020-03-08 11:08:27,638 ERROR: Exception on /user/1 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 46, in user
+    recommendations = user.get_recommendations()
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 71, in get_recommendations
+    track = Track.query.get(int(row["track_id"]))
+TypeError: tuple indices must be integers or slices, not str
+2020-03-10 13:01:01,152 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:01:26,932 ERROR: Exception on /user/20 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
 Traceback (most recent call last):
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -50,37 +32,77 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 55, in user
-    events=events)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\templating.py", line 140, in render_template
-    ctx.app,
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\asyncsupport.py", line 76, in render
-    return original_render(self, *args, **kwargs)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 1008, in render
-    return self.environment.handle_exception(exc_info, True)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 780, in handle_exception
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 46, in user
+    recommendations = user.get_recommendations()
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 71, in get_recommendations
+    print(row["track_id"])
+TypeError: tuple indices must be integers or slices, not str
+2020-03-10 13:01:51,328 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:01:52,944 ERROR: Exception on /user/20 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
     reraise(exc_type, exc_value, tb)
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\_compat.py", line 37, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\user.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 4, in block "doc"
-    {%- block html %}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 20, in block "html"
-    {% block body -%}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask_bootstrap\templates\bootstrap\base.html", line 23, in block "body"
-    {% block content -%}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\base.html", line 44, in block "content"
-    {% block app_content %}{% endblock %}
-  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\templates\user.html", line 34, in block "app_content"
-    {{form.hidden_tag() }}
-  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\jinja2\environment.py", line 430, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'form' is undefined
-2020-03-08 11:10:43,325 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 46, in user
+    recommendations = user.get_recommendations()
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 71, in get_recommendations
+    print(row["track_id"])
+TypeError: tuple indices must be integers or slices, not str
+2020-03-10 13:02:23,400 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:02:31,445 ERROR: Exception on /user/20 [GET] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 46, in user
+    recommendations = user.get_recommendations()
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 74, in get_recommendations
+    print(row["track_id"])
+TypeError: tuple indices must be integers or slices, not str
+2020-03-10 13:03:20,571 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:04:43,230 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:05:07,539 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:10:16,914 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:12:10,689 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:17:15,868 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:18:51,167 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:20:32,681 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:26:06,299 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
+2020-03-10 13:28:57,462 ERROR: Exception on /user/20 [POST] [in c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\domwh\pycharmprojects\recommender-systems-coursework\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\main\routes.py", line 32, in user
+    recommendations = user.get_recommendations(context_form.to_context())
+  File "C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\models.py", line 61, in get_recommendations
+    weight += B[i, context[key]]
+IndexError: index 42 is out of bounds for axis 1 with size 24
+2020-03-10 13:34:27,572 INFO: ffgt86 startup [in C:\Users\domwh\PycharmProjects\Recommender-Systems-Coursework\app\__init__.py:56]
